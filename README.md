@@ -8,8 +8,8 @@ Statična stranica za PIER bistro, Velo Varoš, Split.
 |---|---|
 | `site/index.html` | **aktivna verzija** — vođena šetnja s poglavljima |
 | `site/v1.html` | prethodna verzija (bez letvice poglavlja) |
-| `site/frames/hi/` | 200 frameova 1296×2304 za scroll animaciju |
-| `site/frames/lo/` | 50 frameova 640×1138, učitavaju se prvi |
+| `site/frames/hi/` | 200 frameova 1440×2560 (q88) za scroll animaciju |
+| `site/frames/lo/` | 50 frameova 720×1280 (q66), učitavaju se prvi |
 | `site/img/` | galerija i poster |
 | `mobil.html` | pregled u okviru mobitela, s prebacivanjem verzija |
 | `vercel.json` | statični deploy iz `site/`, dugo keširanje frameova |
