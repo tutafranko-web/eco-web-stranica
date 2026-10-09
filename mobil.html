@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="hr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PIER — mobilni pregled</title>
+<style>
+  :root{
+    --bg:#191b1e; --panel:#232629; --line:#33383d;
+    --txt:#e6e3dd; --dim:#8b9197; --brass:#c8912f;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; background:var(--bg); color:var(--txt);
+    font:14px/1.5 "Archivo","Segoe UI",system-ui,sans-serif;
+    display:flex; flex-direction:column; align-items:center;
+    padding:20px 16px 40px; gap:14px;
+  }
+  h1{font:300 15px/1 Georgia,serif; letter-spacing:.34em; margin:0; text-indent:.34em}
+  .sub{color:var(--dim); font-size:11px; letter-spacing:.14em; text-transform:uppercase}
+
+  .bar{display:flex; gap:7px; flex-wrap:wrap; justify-content:center}
+  .bar button{
+    font:inherit; font-size:12px; background:var(--panel); color:var(--dim);
+    border:1px solid var(--line); border-radius:999px; padding:7px 15px; cursor:pointer;
+  }
+  .bar button:hover{color:var(--txt)}
+  .bar button[aria-pressed="true"]{background:var(--txt); color:#191b1e; border-color:var(--txt)}
+  .vers button[aria-pressed="true"]{background:var(--brass); color:#191b1e; border-color:var(--brass)}
+  .vers button b{font-weight:600}
+
+  .phone{
+    position:relative; background:#0b0d0f; border:10px solid #2c3034; border-radius:42px;
+    box-shadow:0 30px 70px rgba(0,0,0,.6), 0 0 0 1px #3d4247;
+    overflow:hidden; flex:none; transition:width .25s, height .25s;
+  }
+  .notch{
+    position:absolute; top:8px; left:50%; transform:translateX(-50%);
+    width:98px; height:22px; background:#0b0d0f; border-radius:14px; z-index:3; pointer-events:none;
+  }
+  iframe{display:block; width:100%; height:100%; border:0; background:#090c0f}
+
+  .meta{color:var(--dim); font-size:11.5px; display:flex; gap:14px; flex-wrap:wrap; justify-content:center; align-items:center}
+  .meta b{color:var(--brass); font-weight:500}
+  a.open{color:var(--brass); text-decoration:none; font-size:12px}
+  a.open:hover{text-decoration:underline}
+  .what{
+    max-width:34rem; text-align:center; color:var(--dim); font-size:12px; line-height:1.6;
+    border-top:1px solid var(--line); padding-top:14px; margin-top:4px;
+  }
+</style>
+</head>
+<body>
+
+<h1>PIER</h1>
+<div class="sub">mobilni pregled</div>
+
+<div class="bar vers" id="vers">
+  <button type="button" data-src="site/index.html" aria-pressed="true"><b>v2</b> — vođena šetnja</button>
+  <button type="button" data-src="site/v1.html"  aria-pressed="false">v1 — prethodna</button>
+</div>
+
+<div class="bar" id="size">
+  <button type="button" data-w="390" data-h="844" aria-pressed="true">iPhone 14 · 390×844</button>
+  <button type="button" data-w="430" data-h="932" aria-pressed="false">Pro Max · 430×932</button>
+  <button type="button" data-w="360" data-h="800" aria-pressed="false">Android · 360×800</button>
+  <button type="button" data-w="820" data-h="1000" aria-pressed="false">Desktop · 820×1000</button>
+</div>
+
+<div class="phone" id="phone" style="width:410px;height:864px">
+  <div class="notch" id="notch"></div>
+  <iframe id="fr" src="site/index.html" title="PIER bistro"></iframe>
+</div>
+
+<div class="meta">
+  <span>okvir <b id="dims">390 × 844</b></span>
+  <span>verzija <b id="vname">v2</b></span>
+  <a class="open" id="openFull" href="site/index.html" target="_blank" rel="noopener">otvori punu stranicu →</a>
+</div>
+
+<p class="what">
+  v2 dijeli šetnju na četiri poglavlja — Prilaz, Ulaz, Šank, Salon.
+  Desna letvica pokazuje gdje si i pušta te da skočiš na bilo koju dionicu,
+  a „preskoči" vodi ravno na sadržaj.
+</p>
+
+<script>
+  var phone = document.getElementById('phone');
+  var fr    = document.getElementById('fr');
+  var dims  = document.getElementById('dims');
+  var vname = document.getElementById('vname');
+  var notch = document.getElementById('notch');
+  var openFull = document.getElementById('openFull');
+  var BORDER = 20;
+  var cur = 'site/index.html';
+
+  function press(group, btn){
+    document.querySelectorAll('#' + group + ' button').forEach(function(o){
+      o.setAttribute('aria-pressed', String(o === btn));
+    });
+  }
+
+  document.querySelectorAll('#vers button').forEach(function(b){
+    b.addEventListener('click', function(){
+      press('vers', b);
+      cur = b.dataset.src;
+      fr.src = cur;
+      openFull.href = cur;
+      vname.textContent = b.textContent.trim().split(' ')[0];
+    });
+  });
+
+  document.querySelectorAll('#size button').forEach(function(b){
+    b.addEventListener('click', function(){
+      press('size', b);
+      var w = +b.dataset.w, h = +b.dataset.h;
+      phone.style.width  = (w + BORDER) + 'px';
+      phone.style.height = (h + BORDER) + 'px';
+      notch.style.display = w > 600 ? 'none' : '';
+      dims.textContent = w + ' × ' + h;
+      fr.contentWindow.location.reload();
+    });
+  });
+</script>
+
+</body>
+</html>

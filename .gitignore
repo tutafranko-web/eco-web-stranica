@@ -1,0 +1,12 @@
+# sustav
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# alati
+.vercel
+node_modules/
+
+# video masteri — 58 MB, ne trebaju za web, stoje lokalno u video/
+video/
+pregled.html
