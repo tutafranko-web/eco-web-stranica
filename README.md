@@ -10,7 +10,7 @@ Uživo: **https://pier-bistro.vercel.app**
 | `site/index.html` | **aktivna verzija** — vođena šetnja s poglavljima |
 | `site/v1.html` | prethodna verzija, `noindex` (živa na `/v1`) |
 | `site/404.html` | stranica za nepostojeće adrese |
-| `site/frames/hi/` | 200 okvira 1440×2560 (q84) za scroll animaciju |
+| `site/frames/hi/` | 400 okvira 1440×2560 (q72) za scroll animaciju |
 | `site/frames/lo/` | 50 okvira 720×1280 (q66), učitavaju se prvi |
 | `site/img/` | poster, fotografije prostora i OG kartica za dijeljenje |
 | `site/robots.txt` | tražilice i AI pauci — sve dopušteno osim `/v1` |
@@ -23,14 +23,39 @@ Uživo: **https://pier-bistro.vercel.app**
 ## Scroll animacija
 
 Nije video nego niz slika na canvasu — scrubbanje `<video>` elementa
-trza na iOS Safariju. Učitavanje je dvorazinsko: mala serija (1,6 MB)
-omogući skrolanje odmah, oštra (25 MB) se dopunjava u pozadini i
-zamjenjuje je okvir po okvir. Na `saveData` ili 2G vezi oštra se ne pokreće.
+trza na iOS Safariju.
+
+Učitavanje ide u tri koraka. Mala serija (50 okvira, 1,7 MB) omogući
+skrolanje odmah. Oštra serija ima 400 okvira i dolazi u **dva prolaza**:
+prvo svaki drugi okvir (16 MB) — što je već upotrebljiva šetnja — pa
+ostatak (još 16 MB), koji je dopuni do glatkog. Na `saveData` ili 2G
+oštra se uopće ne pokreće; na 3G stane nakon prvog prolaza.
+
+Kretanje je glačano na dva načina: skrol ne gura sliku izravno nego
+vuče metu koju prikaz stiže u koracima (fling ne preskoči okvire), a
+dvije susjedne slike se pretapaju po razlomku položaja, pa sitni skok
+između okvira nestane bez ijednog novog bajta.
+
+Adresa okvira nosi biljeg izdanja (`?v=3`). Okviri se keširaju kao
+nepromjenjivi na godinu dana, pa se pri svakoj novoj seriji biljeg
+**mora** podići — inače povratnik zauvijek gleda staru snimku.
 
 Niz okvira **nema** fade iz crnog ni u crno — isporučeni mp4 ih ima, ali
 na stranici bi značili da se hero otvara na crnom, a poziv na rezervaciju
 na kraju stoji na crnom. Ako ikad ponovno generiraš okvire, koristi
 montažu bez `fade` filtara.
+
+## Jezik
+
+Zadani jezik je **engleski** — i varijabla u skripti i sam markup, da
+tražilice i dijeljenje ne vide hrvatski tekst pod `lang="en"`. Hrvatska
+verzija je na `?lang=hr` i na gumbu HR. Prijevodi stoje u jednoj tablici
+(`T.hr` / `T.en`); statični markup je iz nje i generiran, pa se ne mogu
+razići.
+
+Ako ikad poželiš da stranica sama pogodi jezik po pregledniku, to je
+jedan redak uz `var lang` — ali onda je teže testirati jer se razlikuje
+od uređaja do uređaja.
 
 ## Mjerenje
 

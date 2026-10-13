@@ -1,33 +1,33 @@
 <!doctype html>
-<html lang="hr">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>PIER bistro — Velo Varoš, Split</title>
-<meta name="description" content="PIER bistro u kamenoj kaleti Velog Varoša. Mediteranska kuhinja, riba i svježa tjestenina — od jutarnje kave do zadnje večere. Rezerviraj stol.">
+<meta name="description" content="PIER bistro in a stone alley of Velo Varoš, Split. Mediterranean cooking, fish and fresh pasta — from the morning coffee to the last dinner. Book a table.">
 <link rel="canonical" href="https://pier-bistro.vercel.app/">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
 
-<!-- jezici: ista stranica, ?lang=en prebacuje na engleski pri učitavanju -->
-<link rel="alternate" hreflang="hr" href="https://pier-bistro.vercel.app/">
-<link rel="alternate" hreflang="en" href="https://pier-bistro.vercel.app/?lang=en">
+<!-- jezici: ista stranica, zadano engleski; ?lang=hr otvara hrvatsku -->
+<link rel="alternate" hreflang="en" href="https://pier-bistro.vercel.app/">
+<link rel="alternate" hreflang="hr" href="https://pier-bistro.vercel.app/?lang=hr">
 <link rel="alternate" hreflang="x-default" href="https://pier-bistro.vercel.app/">
 
 <!-- dijeljenje -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="PIER bistro">
 <meta property="og:title" content="PIER bistro — Velo Varoš, Split">
-<meta property="og:description" content="Mediteranska kuhinja u kamenoj kaleti. Prošeći se kroz prostor i rezerviraj stol.">
+<meta property="og:description" content="Mediterranean cooking in a stone alley. Walk through the room and book a table.">
 <meta property="og:url" content="https://pier-bistro.vercel.app/">
 <meta property="og:image" content="https://pier-bistro.vercel.app/img/og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Otvorena vrata PIER bistroa u kamenoj kaleti, topla svjetlost iznutra">
-<meta property="og:locale" content="hr_HR">
-<meta property="og:locale:alternate" content="en_GB">
+<meta property="og:image:alt" content="The open door of PIER bistro in a stone alley, warm light inside">
+<meta property="og:locale" content="en_GB">
+<meta property="og:locale:alternate" content="hr_HR">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="PIER bistro — Velo Varoš, Split">
-<meta name="twitter:description" content="Mediteranska kuhinja u kamenoj kaleti. Prošeći se kroz prostor i rezerviraj stol.">
+<meta name="twitter:description" content="Mediterranean cooking in a stone alley. Walk through the room and book a table.">
 <meta name="twitter:image" content="https://pier-bistro.vercel.app/img/og.jpg">
 
 <!-- uređaj -->
@@ -44,7 +44,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://www.googletagmanager.com">
-<link rel="preload" as="image" href="frames/lo/f0001.webp?v=2" fetchpriority="high">
+<link rel="preload" as="image" href="frames/lo/f0001.webp?v=3" fetchpriority="high">
 
 <!-- ══ Strukturirani podaci ══════════════════════════════════
      Ovo Google čita kao činjenice o restoranu i može ih pokazati
@@ -62,7 +62,7 @@
       "@type": "Restaurant",
       "@id": "https://pier-bistro.vercel.app/#restoran",
       "name": "PIER bistro",
-      "description": "Mali bistro u kamenoj kaleti Velog Varoša u Splitu. Mediteranska kuhinja — riba, svježa tjestenina i roštilj — od jutarnje kave do zadnje večere.",
+      "description": "A small bistro in a stone alley of Velo Varoš in Split. Mediterranean cooking — fish, fresh pasta and the grill — from the morning coffee to the last dinner.",
       "url": "https://pier-bistro.vercel.app/",
       "image": [
         "https://pier-bistro.vercel.app/img/og.jpg",
@@ -81,7 +81,7 @@
       },
       "hasMap": "https://maps.google.com/?q=PIER+bistro+Senjska+2+Split",
       "areaServed": { "@type": "City", "name": "Split" },
-      "servesCuisine": ["Mediteranska", "Dalmatinska", "Riba i plodovi mora"],
+      "servesCuisine": ["Mediterranean", "Dalmatian", "Seafood"],
       "currenciesAccepted": "EUR",
       "acceptsReservations": "https://pier-bistro.vercel.app/#rezervacija",
       "openingHoursSpecification": [{
@@ -95,7 +95,7 @@
         "target": {
           "@type": "EntryPoint",
           "urlTemplate": "https://pier-bistro.vercel.app/#rezervacija",
-          "inLanguage": "hr",
+          "inLanguage": "en",
           "actionPlatform": [
             "https://schema.org/DesktopWebPlatform",
             "https://schema.org/MobileWebPlatform"
@@ -103,7 +103,7 @@
         },
         "result": {
           "@type": "FoodEstablishmentReservation",
-          "name": "Rezervacija stola u PIER bistrou"
+          "name": "Table reservation at PIER bistro"
         }
       }
     },
@@ -112,7 +112,7 @@
       "@id": "https://pier-bistro.vercel.app/#stranica",
       "url": "https://pier-bistro.vercel.app/",
       "name": "PIER bistro",
-      "inLanguage": ["hr", "en"],
+      "inLanguage": ["en", "hr"],
       "publisher": { "@id": "https://pier-bistro.vercel.app/#restoran" }
     }
   ]
@@ -662,7 +662,7 @@ footer{border-top:1px solid var(--line); background:var(--stone)}
 <body>
 
 <div id="proto">
-  <span><b>Prototip v2</b> · <span data-i18n="protoTxt">rezervacija se još ne šalje nikamo; označeni podaci čekaju potvrdu.</span></span>
+  <span><b data-i18n="protoH">Prototype v2</b> · <span data-i18n="protoTxt">the reservation is not sent anywhere yet; marked details await confirmation.</span></span>
   <button type="button" id="protoX">✕</button>
 </div>
 
@@ -675,16 +675,16 @@ footer{border-top:1px solid var(--line); background:var(--stone)}
     <nav class="nav" id="nav">
       <div class="brand">PIER</div>
       <div class="nav-r">
-        <a class="link" href="#kuhinja" data-i18n="navKuhinja">Kuhinja</a>
-        <a class="link" href="#rezervacija" data-i18n="navRez">Rezervacija</a>
+        <a class="link" href="#kuhinja" data-i18n="navKuhinja">Kitchen</a>
+        <a class="link" href="#rezervacija" data-i18n="navRez">Book</a>
         <div class="lang">
-          <button type="button" data-lang="hr" aria-pressed="true">HR</button>
-          <button type="button" data-lang="en" aria-pressed="false">EN</button>
+          <button type="button" data-lang="hr" aria-pressed="false">HR</button>
+          <button type="button" data-lang="en" aria-pressed="true">EN</button>
         </div>
       </div>
     </nav>
 
-    <div id="sharp" data-i18n="sharp">oštrija slika</div>
+    <div id="sharp" data-i18n="sharp">sharper frames</div>
 
     <!-- šest trenutaka, svaki vezan uz ono što je tada na ekranu -->
     <div class="beats" id="beats">
@@ -692,32 +692,32 @@ footer{border-top:1px solid var(--line); background:var(--stone)}
         <div class="hair"></div>
         <h1>PIER</h1>
         <div class="sub" data-i18n="b0sub">bistro · velo varoš, split</div>
-        <p class="invite" data-i18n="b0inv">Pusti da te odvedemo kroz našu priču.</p>
+        <p class="invite" data-i18n="b0inv">Let us walk you through our story.</p>
       </div>
       <div class="beat" data-b="1">
         <i class="tick"></i>
-        <p data-i18n="b1">Kamena kaleta kod crkve sv. Križa</p>
-        <span class="cap" data-i18n="b1c">Velo Varoš, zapadno od Dioklecijanove palače. Uske ulice, kamene kuće, stube prema Marjanu.</span>
+        <p data-i18n="b1">A stone alley by the Church of the Holy Cross</p>
+        <span class="cap" data-i18n="b1c">Velo Varoš, west of Diocletian's Palace. Narrow streets, stone houses, stairs climbing to Marjan.</span>
       </div>
       <div class="beat mid" data-b="2">
         <i class="tick"></i>
-        <p data-i18n="b2">Prag koji te uvuče unutra</p>
-        <span class="cap" data-i18n="b2c">S terase se ulazi ravno u salu — zimi zaklonjeno, ljeti otvoreno na kaletu.</span>
+        <p data-i18n="b2">A threshold that pulls you in</p>
+        <span class="cap" data-i18n="b2c">From the terrace you step straight into the room — sheltered in winter, open to the alley in summer.</span>
       </div>
       <div class="beat right" data-b="3">
         <i class="tick"></i>
-        <p data-i18n="b3">Šank, police s vinima, čaše</p>
-        <span class="cap" data-i18n="b3c">Kava ujutro, vino navečer. Bistro radi od 07:30 do ponoći.</span>
+        <p data-i18n="b3">The bar, the wine shelves, the glasses</p>
+        <span class="cap" data-i18n="b3c">Coffee in the morning, wine at night. The bistro runs from 07:30 to midnight.</span>
       </div>
       <div class="beat" data-b="4">
         <i class="tick"></i>
-        <p data-i18n="b4">Kamen, drvo i topla svjetlost</p>
-        <span class="cap" data-i18n="b4c">Goli kameni zid, drvene grede i biljke sa stropa. Mramorni stolovi pod žaruljama.</span>
+        <p data-i18n="b4">Stone, wood and warm light</p>
+        <span class="cap" data-i18n="b4c">Bare limestone, timber beams and plants from the ceiling. Marble tables under warm bulbs.</span>
       </div>
       <div class="beat" data-b="5">
         <i class="tick"></i>
-        <p data-i18n="b5">I stol koji te čeka</p>
-        <a class="go" href="#rezervacija" data-i18n="goRez">Rezerviraj stol →</a>
+        <p data-i18n="b5">And a table waiting for you</p>
+        <a class="go" href="#rezervacija" data-i18n="goRez">Book a table →</a>
       </div>
     </div>
 
@@ -726,15 +726,15 @@ footer{border-top:1px solid var(--line); background:var(--stone)}
     <nav class="rail" id="rail" aria-label="Poglavlja šetnje"></nav>
 
     <div class="walkbar">
-      <div class="cue" id="cue"><span data-i18n="cue">skrolaj</span><i></i></div>
-      <button type="button" class="skip" id="skip" data-i18n="skip">preskoči ↓</button>
+      <div class="cue" id="cue"><span data-i18n="cue">scroll</span><i></i></div>
+      <button type="button" class="skip" id="skip" data-i18n="skip">skip ↓</button>
     </div>
 
     <!-- poziv koji se sam javi i sam ode; ne prima klikove,
          pa nikad ne stoji gostu na putu -->
     <div class="pozivnik" id="pozivnik" aria-hidden="true">
       <div class="kut">
-        <span data-i18n="dolje">Skrolaj dolje</span>
+        <span data-i18n="dolje">Scroll down</span>
         <i class="strelica"></i>
       </div>
     </div>
@@ -743,7 +743,7 @@ footer{border-top:1px solid var(--line); background:var(--stone)}
 
     <!-- zamjena kad je kretanje isključeno -->
     <div class="still" id="still">
-      <img src="img/poster.webp?v=2" alt="PIER bistro, ulaz iz kamene kalete" width="1440" height="2560">
+      <img src="img/poster.webp?v=3" alt="PIER bistro, the entrance from the stone alley" width="1440" height="2560">
       <div id="stillList"></div>
     </div>
   </div>
@@ -754,35 +754,35 @@ footer{border-top:1px solid var(--line); background:var(--stone)}
   <section class="sec" id="prica">
     <div class="inner">
       <div class="mark"><span data-i18n="k1">Velo Varoš</span></div>
-      <h2 class="t" data-i18n="pricaH">Najstariji dio <em>Splita</em></h2>
-      <p class="lede" data-i18n="pricaL">Kamene kalete zapadno od Dioklecijanove palače, mali trg kod crkve svetog Križa — i vrata koja se otvore u toplu sobu.</p>
-      <p class="prose drop" data-i18n="pricaB">Velo Varoš je stara ribarska i klesarska četvrt: uske ulice, kamene kuće, stube koje vode prema Marjanu. PIER je u njoj mali bistro koji radi cijeli dan — od jutarnje kave i doručka, preko ručka, do večere koja se otegne do ponoći.</p>
+      <h2 class="t" data-i18n="pricaH">The oldest part of <em>Split</em></h2>
+      <p class="lede" data-i18n="pricaL">Stone lanes west of Diocletian's Palace, a small square by the Church of the Holy Cross — and a door that opens into a warm room.</p>
+      <p class="prose drop" data-i18n="pricaB">Velo Varoš is the old fishermen's and stonemasons' quarter: narrow streets, stone houses, stairs climbing towards Marjan. PIER is a small bistro in it that runs all day — from the morning coffee and breakfast, through lunch, to a dinner that stretches to midnight.</p>
     </div>
   </section>
 
   <section class="sec" id="kuhinja">
     <div class="inner">
-      <div class="mark"><span data-i18n="k2">Kuhinja</span></div>
-      <h2 class="t" data-i18n="kuhH">Mediteran i <em>more</em></h2>
-      <p class="lede" data-i18n="kuhL">Riba, svježa tjestenina i roštilj — kuhano jednostavno, od onoga što daje Dalmacija.</p>
+      <div class="mark"><span data-i18n="k2">Kitchen</span></div>
+      <h2 class="t" data-i18n="kuhH">The Mediterranean and <em>the sea</em></h2>
+      <p class="lede" data-i18n="kuhL">Fish, fresh pasta and the grill — cooked simply, from what Dalmatia gives.</p>
       <div class="dishes" id="dishes"></div>
       <div class="svcline" id="svcline"></div>
-      <p class="fnote"><span data-i18n="kuhNote">Popis jela sastavljen je iz javnih izvora i treba ga potvrditi s restoranom.</span></p>
+      <p class="fnote"><span data-i18n="kuhNote">This list is drawn from public sources and should be confirmed with the restaurant.</span></p>
     </div>
   </section>
 
   <section class="sec" id="prostor">
     <div class="inner">
-      <div class="mark"><span data-i18n="k3">Dvije sobe</span></div>
-      <h2 class="t" data-i18n="prostorH">Vanka ili <em>unutar</em></h2>
+      <div class="mark"><span data-i18n="k3">Two rooms</span></div>
+      <h2 class="t" data-i18n="prostorH">Outside or <em>in</em></h2>
       <div class="carte-list">
         <div class="item">
-          <div class="led"><span class="a" data-i18n="r1n">Vanka</span><span class="z"></span><span class="b" data-i18n="r1k">terasa</span></div>
-          <p data-i18n="r1p">Stolovi u kaleti, pod krošnjom i uličnim svjetlom. Za tople večeri i duge večere na otvorenom.</p>
+          <div class="led"><span class="a" data-i18n="r1n">Outside</span><span class="z"></span><span class="b" data-i18n="r1k">terrace</span></div>
+          <p data-i18n="r1p">Tables in the lane, under the tree and the street lamps. For warm evenings and long dinners in the open.</p>
         </div>
         <div class="item">
-          <div class="led"><span class="a" data-i18n="r2n">Unutar</span><span class="z"></span><span class="b" data-i18n="r2k">salon</span></div>
-          <p data-i18n="r2p">Kameni zid, drvene grede i mekana rasvjeta. Mirnije, zaklonjeno i toplo bez obzira na vrijeme.</p>
+          <div class="led"><span class="a" data-i18n="r2n">Inside</span><span class="z"></span><span class="b" data-i18n="r2k">dining room</span></div>
+          <p data-i18n="r2p">Stone walls, timber beams and soft light. Quieter, sheltered and warm whatever the weather.</p>
         </div>
       </div>
     </div>
@@ -790,68 +790,68 @@ footer{border-top:1px solid var(--line); background:var(--stone)}
 
   <section class="sec" id="rezervacija">
     <div class="inner">
-      <div class="mark"><span data-i18n="k5">Knjiga</span></div>
-      <h2 class="t" data-i18n="rezH">Rezerviraj <em>stol</em></h2>
+      <div class="mark"><span data-i18n="k5">The book</span></div>
+      <h2 class="t" data-i18n="rezH">Book a <em>table</em></h2>
       <form class="carte" id="form" novalidate>
         <i class="tk tl"></i><i class="tk tr"></i><i class="tk bl"></i><i class="tk br"></i>
         <p class="said" id="said"></p>
         <div class="carte-b" id="fields">
           <div class="stepx">
-            <h3><span class="no">I</span><span data-i18n="sKada">Gdje i kada</span></h3>
+            <h3><span class="no">I</span><span data-i18n="sKada">Where and when</span></h3>
             <div class="grid2">
-              <label class="fld w2"><span data-i18n="fSek">Sekcija</span>
+              <label class="fld w2"><span data-i18n="fSek">Section</span>
                 <select id="sekcija">
-                  <option value="vanka"  data-i18n-opt="r1n">Vanka</option>
-                  <option value="unutar" data-i18n-opt="r2n">Unutar</option>
+                  <option value="vanka"  data-i18n-opt="r1n">Outside</option>
+                  <option value="unutar" data-i18n-opt="r2n">Inside</option>
                 </select></label>
-              <label class="fld"><span data-i18n="fDatum">Datum</span>
+              <label class="fld"><span data-i18n="fDatum">Date</span>
                 <input type="date" id="datum" required></label>
-              <label class="fld"><span data-i18n="fVrijeme">Vrijeme</span>
+              <label class="fld"><span data-i18n="fVrijeme">Time</span>
                 <select id="vrijeme" required></select></label>
             </div>
           </div>
           <div class="stepx">
-            <h3><span class="no">II</span><span data-i18n="sKoliko">Koliko vas je</span></h3>
+            <h3><span class="no">II</span><span data-i18n="sKoliko">How many of you</span></h3>
             <div class="grid2">
-              <label class="fld"><span data-i18n="fOdrasli">Odraslih</span><select id="odrasli"></select></label>
-              <label class="fld"><span data-i18n="fDjeca">Djece</span><select id="djeca"></select></label>
+              <label class="fld"><span data-i18n="fOdrasli">Adults</span><select id="odrasli"></select></label>
+              <label class="fld"><span data-i18n="fDjeca">Children</span><select id="djeca"></select></label>
             </div>
             <p id="avail"></p>
           </div>
           <div class="stepx">
-            <h3><span class="no">III</span><span data-i18n="sTko">Tko dolazi</span></h3>
+            <h3><span class="no">III</span><span data-i18n="sTko">Who is coming</span></h3>
             <div class="grid2">
-              <label class="fld w2"><span data-i18n="fIme">Ime i prezime</span>
+              <label class="fld w2"><span data-i18n="fIme">Full name</span>
                 <input type="text" id="ime" autocomplete="name" required></label>
               <label class="fld"><span data-i18n="fEmail">E-mail</span>
                 <input type="email" id="email" autocomplete="email" required></label>
-              <label class="fld"><span data-i18n="fTel">Telefon</span>
+              <label class="fld"><span data-i18n="fTel">Phone</span>
                 <input type="tel" id="tel" autocomplete="tel" required></label>
             </div>
             <details class="opt">
-              <summary data-i18n="optMore">Država, grad i napomene</summary>
+              <summary data-i18n="optMore">Country, city and notes</summary>
               <div class="grid2">
-                <label class="fld"><span data-i18n="fDrzava">Država</span>
+                <label class="fld"><span data-i18n="fDrzava">Country</span>
                   <input type="text" id="drzava" autocomplete="country-name"></label>
-                <label class="fld"><span data-i18n="fGrad">Grad</span>
+                <label class="fld"><span data-i18n="fGrad">City</span>
                   <input type="text" id="grad" autocomplete="address-level2"></label>
-                <label class="fld w2"><span data-i18n="fZahtjevi">Posebni zahtjevi</span>
-                  <textarea id="zahtjevi" data-i18n-ph="phZahtjevi" placeholder="Alergije, rođendan, visoka stolica, pristup kolicima…"></textarea></label>
-                <label class="fld w2"><span data-i18n="fNapomena">Napomena</span>
-                  <textarea id="napomena" data-i18n-ph="phNapomena" placeholder="Sve ostalo što bismo trebali znati"></textarea></label>
+                <label class="fld w2"><span data-i18n="fZahtjevi">Special requests</span>
+                  <textarea id="zahtjevi" data-i18n-ph="phZahtjevi" placeholder="Allergies, birthday, high chair, step-free access…"></textarea></label>
+                <label class="fld w2"><span data-i18n="fNapomena">Notes</span>
+                  <textarea id="napomena" data-i18n-ph="phNapomena" placeholder="Anything else we should know"></textarea></label>
               </div>
             </details>
             <div class="consent">
               <input type="checkbox" id="privola" required>
-              <label for="privola" data-i18n="privola">Suglasan sam s obradom osobnih podataka u svrhu rezervacije i s uvjetima rezervacije.</label>
+              <label for="privola" data-i18n="privola">I agree to my personal data being processed for this reservation and to the booking terms.</label>
             </div>
-            <button class="submit" type="submit" data-i18n="submit">Pošalji rezervaciju</button>
-            <p class="note" data-i18n="noteTxt">Javit ćemo se e-mailom čim potvrdimo stol. Ako kasniš više od 15 minuta, nazovi nas.</p>
+            <button class="submit" type="submit" data-i18n="submit">Send reservation</button>
+            <p class="note" data-i18n="noteTxt">We will e-mail you as soon as the table is confirmed. If you are more than 15 minutes late, please call.</p>
           </div>
         </div>
         <div id="done">
-          <div class="big" data-i18n="doneH">Zahtjev je zaprimljen</div>
-          <p class="note" style="margin:0; text-align:center" data-i18n="doneP">Ovo je prototip — rezervacija još nije poslana restoranu.</p>
+          <div class="big" data-i18n="doneH">Request received</div>
+          <p class="note" style="margin:0; text-align:center" data-i18n="doneP">This is a prototype — the reservation has not been sent to the restaurant.</p>
           <div class="rec" id="rec"></div>
         </div>
       </form>
@@ -860,22 +860,22 @@ footer{border-top:1px solid var(--line); background:var(--stone)}
 
   <section class="sec" id="info">
     <div class="inner">
-      <div class="mark"><span data-i18n="k6">Dolazak</span></div>
-      <h2 class="t" data-i18n="infoH">Gdje i <em>kada</em></h2>
+      <div class="mark"><span data-i18n="k6">Finding us</span></div>
+      <h2 class="t" data-i18n="infoH">Where and <em>when</em></h2>
       <div class="status" id="status"><i></i><span></span></div>
       <div class="arrive">
         <div>
-          <h3 data-i18n="iAdresa">Adresa</h3>
+          <h3 data-i18n="iAdresa">Address</h3>
           <div class="addr" id="vAdresa"></div>
-          <a class="lnk" id="vMaps" target="_blank" rel="noopener"><span data-i18n="iMaps">Otvori u kartama</span> →</a>
+          <a class="lnk" id="vMaps" target="_blank" rel="noopener"><span data-i18n="iMaps">Open in maps</span> →</a>
           <div class="reach" id="vKontakt"></div>
         </div>
         <div>
-          <h3 data-i18n="iRadno">Radno vrijeme</h3>
+          <h3 data-i18n="iRadno">Opening hours</h3>
           <div class="hrs" id="vHours"></div>
         </div>
       </div>
-      <p class="fnote" id="fnote"><span data-i18n="fnote">Označeni podaci preuzeti su iz javnih izvora i čekaju potvrdu restorana.</span></p>
+      <p class="fnote" id="fnote"><span data-i18n="fnote">Marked details come from public sources and await the restaurant's confirmation.</span></p>
     </div>
   </section>
 
@@ -886,17 +886,17 @@ footer{border-top:1px solid var(--line); background:var(--stone)}
     <div class="colo-top">
       <div class="mk">PIER<small data-i18n="cBistro">bistro · velo varoš</small></div>
       <div class="mid" id="cMid"></div>
-      <a class="up" href="#" id="toTop">↑ <span data-i18n="cTop">na vrh</span></a>
+      <a class="up" href="#" id="toTop">↑ <span data-i18n="cTop">back to top</span></a>
     </div>
     <div class="colo-bot">
       <span>© <span id="yr"></span> PIER</span>
-      <span data-i18n="cMade">šetnja snimljena u kaleti</span>
+      <span data-i18n="cMade">walkthrough filmed in the alley</span>
     </div>
   </div>
 </footer>
 
 <div id="cta">
-  <a class="primary" href="#rezervacija" data-i18n="ctaRez">Rezerviraj stol</a>
+  <a class="primary" href="#rezervacija" data-i18n="ctaRez">Book a table</a>
   <a class="ghost" id="ctaTel" href="#" aria-label="Nazovi">☏</a>
 </div>
 
@@ -951,6 +951,7 @@ var BEATS = [
 
 var T = {
 hr:{
+  protoH:"Prototip v2",
   protoTxt:"rezervacija se još ne šalje nikamo; označeni podaci čekaju potvrdu.",
   navKuhinja:"Kuhinja", navRez:"Rezervacija",
   b0sub:"bistro · velo varoš, split",
@@ -1021,6 +1022,7 @@ hr:{
   rDatum:"Datum", rVrijeme:"Vrijeme", rSekcija:"Sekcija", rGosti:"Gosti", rIme:"Ime", rEmail:"E-mail"
 },
 en:{
+  protoH:"Prototype v2",
   protoTxt:"the reservation is not sent anywhere yet; marked details await confirmation.",
   navKuhinja:"Kitchen", navRez:"Book",
   b0sub:"bistro · velo varoš, split",
@@ -1091,7 +1093,7 @@ en:{
   rDatum:"Date", rVrijeme:"Time", rSekcija:"Section", rGosti:"Guests", rIme:"Name", rEmail:"E-mail"
 }};
 
-var lang = "hr";
+var lang = "en";
 function t(k){ var v = (T[lang] && T[lang][k]); return v === undefined ? (T.hr[k] === undefined ? k : T.hr[k]) : v; }
 function pad(n){ return (n<10?'0':'') + n; }
 function iso(d){ return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()); }
@@ -1101,7 +1103,7 @@ document.getElementById('protoX').addEventListener('click', function(){ document
 
 /* ══ 1. Vođena šetnja ═════════════════════════════════════════════ */
 var Walk = (function(){
-  var HI = 200, LO = 50, STEP = 4;
+  var HI = 400, LO = 50, STEP = 8;
   var cv = document.getElementById('seq'), ctx = cv.getContext('2d', {alpha:false});
   var walk = document.getElementById('walk'), loader = document.getElementById('loader');
   var lbar = document.getElementById('lbar'), cue = document.getElementById('cue');
@@ -1111,6 +1113,7 @@ var Walk = (function(){
   var beats = [].slice.call(document.querySelectorAll('.beat'));
   var hi = new Array(HI), hiOk = new Array(HI), lo = new Array(LO), loOk = new Array(LO);
   var lastKey = '', loDone = 0, aktivno = -1;
+  var pCilj = 0, pSad = 0, tece = false;
   var krenulo = false, zavrseno = false, pocetak = Date.now();
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   var conn = navigator.connection || {};
@@ -1119,20 +1122,28 @@ var Walk = (function(){
   /* biljeg izdanja: okviri se kesiraju kao nepromjenjivi, pa im se
      pri svakoj novoj seriji mora promijeniti adresa, inace povratnik
      zauvijek gleda staru snimku */
-  var IZDANJE = '2';
+  var IZDANJE = '3';
   function srcHi(i){ return 'frames/hi/f' + String(i+1).padStart(4,'0') + '.webp?v=' + IZDANJE; }
   function srcLo(i){ return 'frames/lo/f' + String(i+1).padStart(4,'0') + '.webp?v=' + IZDANJE; }
 
   function fit(){
     var dpr = Math.min(window.devicePixelRatio || 1, 3);
     cv.width = Math.round(cv.clientWidth*dpr); cv.height = Math.round(cv.clientHeight*dpr);
-    lastKey = ''; render();
+    lastKey = ''; render(pSad);
   }
-  function paint(img){
+  function polozi(img, alfa){
     var cw = cv.width, ch = cv.height, iw = img.naturalWidth, ih = img.naturalHeight;
     var s = Math.max(cw/iw, ch/ih);
-    ctx.fillStyle = '#000'; ctx.fillRect(0,0,cw,ch);
+    ctx.globalAlpha = alfa;
     ctx.drawImage(img, (cw-iw*s)/2, (ch-ih*s)/2, iw*s, ih*s);
+    ctx.globalAlpha = 1;
+  }
+  /* dvije susjedne slike pretopljene po razlomku polozaja: sitni
+     skok izmedju okvira nestane, a ne kosta ni jedan novi bajt */
+  function paint(a, b, f){
+    ctx.fillStyle = '#000'; ctx.fillRect(0, 0, cv.width, cv.height);
+    polozi(a, 1);
+    if (b && b !== a && f > 0.015) polozi(b, f);
   }
   function pick(i){
     if (hiOk[i]) return ['h'+i, hi[i]];
@@ -1188,11 +1199,18 @@ var Walk = (function(){
     window.scrollTo({ top: top + p*span() + 2, behavior:'smooth' });
   }
 
-  function render(){
-    var p = progress();
-    var i = Math.min(HI-1, Math.max(0, Math.round(p*(HI-1))));
-    var got = pick(i);
-    if (got && got[0] !== lastKey){ lastKey = got[0]; paint(got[1]); }
+  function render(p){
+    var x = Math.min(HI-1, Math.max(0, p*(HI-1)));
+    var i = Math.floor(x), f = x - i;
+    var a = pick(i), b = pick(Math.min(HI-1, i+1));
+    if (a){
+      /* kljuc nosi i razlomak, inace se pretapanje ne bi osvjezilo */
+      var kljuc = a[0] + '>' + (b ? b[0] : '-') + '@' + Math.round(f*12);
+      if (kljuc !== lastKey){
+        lastKey = kljuc;
+        paint(a[1], b ? b[1] : null, f);
+      }
+    }
 
     var ikakav = 0;
     for (var k=0;k<beats.length;k++){
@@ -1243,10 +1261,22 @@ var Walk = (function(){
     nav.classList.toggle('fixed', past);
     cta.classList.toggle('on', past);
     document.body.classList.toggle('cta-on', past);
-    tick = false;
   }
-  var tick = false;
-  function onScroll(){ if (!tick){ tick = true; requestAnimationFrame(render); } }
+
+  /* Skrol ne gura sliku izravno nego vuce metu; prikaz je stize
+     u koracima. Fling tako ne preskace okvire, a cijeli hero -
+     slika, tekst i letvica - putuje kao jedna cjelina.          */
+  function petlja(){
+    var d = pCilj - pSad;
+    if (Math.abs(d) < 0.0003){ pSad = pCilj; render(pSad); tece = false; return; }
+    pSad += d * 0.22;
+    render(pSad);
+    requestAnimationFrame(petlja);
+  }
+  function onScroll(){
+    pCilj = progress();
+    if (!tece){ tece = true; requestAnimationFrame(petlja); }
+  }
 
   function grab(url, store, flags, idx, done){
     var im = new Image(); im.decoding = 'async';
@@ -1274,11 +1304,28 @@ var Walk = (function(){
   function startHi(){
     if (hiStarted || thrifty) return;
     hiStarted = true; sharp.classList.add('on');
-    var j = 0, live = 0, dn = 0;
+
+    /* Dva prolaza. Prvi uzima svaki drugi okvir - to je tocno ono
+       sto je stranica imala i prije, pa je setnja upotrebljiva na
+       pola podataka. Drugi prolaz popuni medjuprostor i tek tada
+       je kretanje glatko. Na sporoj vezi drugi prolaz izostaje.   */
+    var red = [], i;
+    for (i = 0; i < HI; i += 2) red.push(i);
+    for (i = 1; i < HI; i += 2) red.push(i);
+    var prvi = Math.ceil(HI/2);
+    var sporo = /^(slow-)?2g$|^3g$/.test(conn.effectiveType || '');
+
+    var j = 0, live = 0, dn = 0, stani = false;
     function pump(){
-      while (live < 3 && j < HI){
-        var i = j++; live++;
-        grab(srcHi(i), hi, hiOk, i, function(){ live--; dn++; if (dn >= HI) sharp.classList.remove('on'); pump(); });
+      if (stani) return;
+      while (live < 4 && j < red.length){
+        var k = red[j++]; live++;
+        grab(srcHi(k), hi, hiOk, k, function(){
+          live--; dn++;
+          if (dn === prvi && sporo){ stani = true; sharp.classList.remove('on'); return; }
+          if (dn >= HI) sharp.classList.remove('on');
+          pump();
+        });
       }
     }
     pump();
@@ -1694,10 +1741,10 @@ document.querySelectorAll('.lang button').forEach(function(b){
     tr.setAttribute('role', 'dialog');
     tr.setAttribute('aria-label', 'Kolacici');
     tr.innerHTML =
-      '<p data-i18n="privTxt">' + t('privTxt') + '</p>' +
+      '<p data-i18n="privTxt">We use Google Analytics to see how many people finish the walkthrough and book a table. Without it we do not know what to fix. Nothing is shared further.</p>' +
       '<div class="dugmad">' +
-        '<button type="button" class="ne" data-i18n="privNe">' + t('privNe') + '</button>' +
-        '<button type="button" class="da" data-i18n="privDa">' + t('privDa') + '</button>' +
+        '<button type="button" class="ne" data-i18n="privNe">Essential only</button>' +
+        '<button type="button" class="da" data-i18n="privDa">Fine by me</button>' +
       '</div>';
     document.body.appendChild(tr);
     requestAnimationFrame(function(){ tr.classList.add('on'); });
