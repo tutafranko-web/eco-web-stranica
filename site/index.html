@@ -3,15 +3,266 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>PIER Bistro Split</title>
-<meta name="description" content="PIER bistro — Velo Varoš, Split. Mediteranska kuhinja, riba i tjestenina, od jutarnje kave do zadnje večere.">
+<title>PIER bistro — Velo Varoš, Split</title>
+<meta name="description" content="PIER bistro u kamenoj kaleti Velog Varoša. Mediteranska kuhinja, riba i svježa tjestenina — od jutarnje kave do zadnje večere. Rezerviraj stol.">
+<link rel="canonical" href="https://pier-bistro.vercel.app/">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+
+<!-- jezici: ista stranica, ?lang=en prebacuje na engleski pri učitavanju -->
+<link rel="alternate" hreflang="hr" href="https://pier-bistro.vercel.app/">
+<link rel="alternate" hreflang="en" href="https://pier-bistro.vercel.app/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://pier-bistro.vercel.app/">
+
+<!-- dijeljenje -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="PIER bistro">
+<meta property="og:title" content="PIER bistro — Velo Varoš, Split">
+<meta property="og:description" content="Mediteranska kuhinja u kamenoj kaleti. Prošeći se kroz prostor i rezerviraj stol.">
+<meta property="og:url" content="https://pier-bistro.vercel.app/">
+<meta property="og:image" content="https://pier-bistro.vercel.app/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Otvorena vrata PIER bistroa u kamenoj kaleti, topla svjetlost iznutra">
+<meta property="og:locale" content="hr_HR">
+<meta property="og:locale:alternate" content="en_GB">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="PIER bistro — Velo Varoš, Split">
+<meta name="twitter:description" content="Mediteranska kuhinja u kamenoj kaleti. Prošeći se kroz prostor i rezerviraj stol.">
+<meta name="twitter:image" content="https://pier-bistro.vercel.app/img/og.jpg">
+
+<!-- uređaj -->
 <meta name="theme-color" content="#0a0d10">
+<meta name="color-scheme" content="dark">
+<meta name="format-detection" content="telephone=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="PIER">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://www.googletagmanager.com">
 <link rel="preload" as="image" href="frames/lo/f0001.webp">
+
+<!-- ══ Strukturirani podaci ══════════════════════════════════
+     Ovo Google čita kao činjenice o restoranu i može ih pokazati
+     u rezultatima. Adresa, radno vrijeme i kuhinja dolaze iz javnih
+     izvora (Google profil, agregatori) i nisu potvrđeni s restoranom.
+     Telefon je namjerno izostavljen jer se dva izvora ne slažu —
+     dodaj "telephone" tek kad se zna koji je točan.
+     Sve ovo mora pratiti PODACI objekt dolje u skripti.
+     ════════════════════════════════════════════════════════ -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Restaurant",
+      "@id": "https://pier-bistro.vercel.app/#restoran",
+      "name": "PIER bistro",
+      "description": "Mali bistro u kamenoj kaleti Velog Varoša u Splitu. Mediteranska kuhinja — riba, svježa tjestenina i roštilj — od jutarnje kave do zadnje večere.",
+      "url": "https://pier-bistro.vercel.app/",
+      "image": [
+        "https://pier-bistro.vercel.app/img/og.jpg",
+        "https://pier-bistro.vercel.app/img/g1-ulaz.webp",
+        "https://pier-bistro.vercel.app/img/g3-sank.webp",
+        "https://pier-bistro.vercel.app/img/g5-salon.webp"
+      ],
+      "logo": "https://pier-bistro.vercel.app/icon-512.png",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Senjska ul. 2",
+        "addressLocality": "Split",
+        "postalCode": "21000",
+        "addressRegion": "Splitsko-dalmatinska županija",
+        "addressCountry": "HR"
+      },
+      "hasMap": "https://maps.google.com/?q=PIER+bistro+Senjska+2+Split",
+      "areaServed": { "@type": "City", "name": "Split" },
+      "servesCuisine": ["Mediteranska", "Dalmatinska", "Riba i plodovi mora"],
+      "currenciesAccepted": "EUR",
+      "acceptsReservations": "https://pier-bistro.vercel.app/#rezervacija",
+      "openingHoursSpecification": [{
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+        "opens": "07:30",
+        "closes": "24:00"
+      }],
+      "potentialAction": {
+        "@type": "ReserveAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://pier-bistro.vercel.app/#rezervacija",
+          "inLanguage": "hr",
+          "actionPlatform": [
+            "https://schema.org/DesktopWebPlatform",
+            "https://schema.org/MobileWebPlatform"
+          ]
+        },
+        "result": {
+          "@type": "FoodEstablishmentReservation",
+          "name": "Rezervacija stola u PIER bistrou"
+        }
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://pier-bistro.vercel.app/#stranica",
+      "url": "https://pier-bistro.vercel.app/",
+      "name": "PIER bistro",
+      "inLanguage": ["hr", "en"],
+      "publisher": { "@id": "https://pier-bistro.vercel.app/#restoran" }
+    }
+  ]
+}
+</script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;0,9..144,400;1,9..144,200;1,9..144,300&family=Archivo:wght@400;500;600&display=swap">
+
+<!-- == Mjerenje ===================================================
+     Upisi mjerni ID iz GA4 (Admin -> Data streams -> Measurement ID,
+     oblik G-XXXXXXXXXX) u GA4_ID dolje. Dok je prazan, sve radi u
+     suhom hodu - dogadjaji se slazu u dataLayer i, uz ?mjerenje=debug,
+     ispisuju u konzolu, ali ne odlaze nikamo.
+
+     Pristanak: Consent Mode v2 krece sa svime odbijenim. Dok gost ne
+     prihvati, GA4 salje samo bezkolacicne signale - tako nalaze GDPR,
+     a Google iz njih i dalje modelira promet.
+     ============================================================== -->
+<script>
+var GA4_ID = "";
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){ dataLayer.push(arguments); }
+
+var MJ = (function(){
+  var DEBUG = /[?&]mjerenje=debug/.test(location.search);
+  var KLJUC = "pier-pristanak";
+
+  /* -- tko nas gleda --------------------------------------------
+     Tri vrste prometa koje treba razdvojiti:
+       covjek        obican posjetitelj
+       agent         stranicu vozi program: AI pomocnik koji je
+                     otvorio preglednik, ili alat za automatizaciju
+       ai_preporuka  covjek, ali je do nas dosao preko AI pomocnika
+     Pauci koji ne izvrsavaju JavaScript ovdje se ne vide -
+     njih hvata middleware.js na rubu mreze.                      */
+  var AGENTI = [
+    ["ChatGPT",    /ChatGPT-User|OAI-SearchBot|GPTBot/i],
+    ["Claude",     /Claude-User|ClaudeBot|Claude-SearchBot|Anthropic/i],
+    ["Perplexity", /Perplexity-User|PerplexityBot/i],
+    ["Gemini",     /Google-Extended|Gemini/i],
+    ["Applebot",   /Applebot/i],
+    ["Bytespider", /Bytespider/i],
+    ["Meta",       /meta-externalagent|FacebookBot/i],
+    ["Amazonbot",  /Amazonbot/i],
+    ["Operator",   /browser-use|Browserbase|Operator\//i],
+    ["Headless",   /HeadlessChrome|PhantomJS|Puppeteer|Playwright|Selenium|Electron/i],
+    ["Pauk",       /bot|crawler|spider|scrap|curl|wget|python-requests|HTTPie|Go-http/i]
+  ];
+  var IZVORI = [
+    ["ChatGPT",    /(^|\.)(chatgpt\.com|chat\.openai\.com|openai\.com)$/i],
+    ["Claude",     /(^|\.)claude\.ai$/i],
+    ["Perplexity", /(^|\.)perplexity\.ai$/i],
+    ["Gemini",     /(^|\.)(gemini\.google\.com|bard\.google\.com)$/i],
+    ["Copilot",    /(^|\.)copilot\.microsoft\.com$/i],
+    ["Grok",       /(^|\.)(grok\.com|x\.ai)$/i],
+    ["Mistral",    /(^|\.)chat\.mistral\.ai$/i],
+    ["Poe",        /(^|\.)poe\.com$/i],
+    ["You",        /(^|\.)you\.com$/i],
+    ["Phind",      /(^|\.)phind\.com$/i]
+  ];
+
+  function tko(){
+    var ua = navigator.userAgent || "", i;
+    for (i = 0; i < AGENTI.length; i++){
+      if (AGENTI[i][1].test(ua)) return { vrsta:"agent", ime:AGENTI[i][0], kako:"user-agent" };
+    }
+    /* program vozi preglednik - agentski preglednici ovo gotovo
+       uvijek ostavljaju ukljucenim */
+    if (navigator.webdriver === true) return { vrsta:"agent", ime:"Nepoznat", kako:"webdriver" };
+
+    var ref = document.referrer || "";
+    if (ref){
+      var host = "";
+      try { host = new URL(ref).hostname; } catch(e){}
+      for (i = 0; i < IZVORI.length; i++){
+        if (IZVORI[i][1].test(host)) return { vrsta:"ai_preporuka", ime:IZVORI[i][0], kako:"referrer" };
+      }
+    }
+    /* neki pomocnici oznace link s utm_source */
+    var m = /[?&]utm_source=([^&]+)/.exec(location.search);
+    if (m){
+      var izv = decodeURIComponent(m[1]);
+      for (i = 0; i < IZVORI.length; i++){
+        if (IZVORI[i][1].test(izv)) return { vrsta:"ai_preporuka", ime:IZVORI[i][0], kako:"utm" };
+      }
+    }
+    return { vrsta:"covjek", ime:"", kako:"" };
+  }
+
+  var gost = tko();
+
+  /* -- pristanak ------------------------------------------------- */
+  function spremljeno(){
+    try { return localStorage.getItem(KLJUC); } catch(e){ return null; }
+  }
+  gtag("consent", "default", {
+    ad_storage:"denied", ad_user_data:"denied", ad_personalization:"denied",
+    analytics_storage:"denied", functionality_storage:"granted",
+    personalization_storage:"denied", security_storage:"granted",
+    wait_for_update: 500
+  });
+  if (spremljeno() === "da") gtag("consent", "update", { analytics_storage:"granted" });
+
+  /* -- GA4 -------------------------------------------------------- */
+  var ukljucen = /^G-[A-Z0-9]+$/.test(GA4_ID);
+  if (ukljucen){
+    var sc = document.createElement("script");
+    sc.async = true;
+    sc.src = "https://www.googletagmanager.com/gtag/js?id=" + GA4_ID;
+    document.head.appendChild(sc);
+    gtag("js", new Date());
+    gtag("config", GA4_ID, {
+      send_page_view: true,
+      user_properties: {
+        promet_vrsta: gost.vrsta,
+        agent_ime:    gost.ime || "(nema)",
+        agent_signal: gost.kako || "(nema)"
+      }
+    });
+  }
+
+  function dog(ime, par){
+    par = par || {};
+    par.promet_vrsta = gost.vrsta;
+    if (gost.ime) par.agent_ime = gost.ime;
+    if (DEBUG) try { console.log("[mjerenje]", ime, par); } catch(e){}
+    if (ukljucen) gtag("event", ime, par);
+    else dataLayer.push({ event: ime, parametri: par });
+  }
+
+  /* agentski posjet biljezimo zasebno od page_view, da se u GA-u
+     vidi kao svoj dogadjaj a ne samo kao dimenzija */
+  if (gost.vrsta !== "covjek"){
+    dog("agent_visit", {
+      agent_signal: gost.kako,
+      jezik_preglednika: navigator.language || "(nema)"
+    });
+  }
+
+  return {
+    dog: dog, gost: gost, debug: DEBUG, ukljucen: ukljucen,
+    pristanak: spremljeno,
+    prihvati: function(da){
+      try { localStorage.setItem(KLJUC, da ? "da" : "ne"); } catch(e){}
+      gtag("consent", "update", { analytics_storage: da ? "granted" : "denied" });
+      dog("consent_choice", { izbor: da ? "prihvaceno" : "odbijeno" });
+    }
+  };
+})();
+</script>
 <style>
 /* ══════════════════════════════════════════════════════════════════
    PIER bistro, Velo Varoš — v2, vođena šetnja.
@@ -226,19 +477,6 @@ h2.t em{font-style:italic; color:var(--lime-dim)}
 .svcline{margin-top:2.2rem; display:flex; flex-wrap:wrap; gap:.5rem}
 .svcline span{border:1px solid var(--line); padding:.45rem .8rem; font:500 9px var(--f-ui); letter-spacing:.2em; text-transform:uppercase; color:var(--lime-dim); font-variant-numeric:lining-nums}
 
-.plates{display:flex; gap:10px; margin:2.4rem calc(-1 * var(--pad)) 0 calc(-1 * (var(--rail) + 1.6rem)); padding:0 var(--pad) 0 calc(var(--rail) + 1.6rem); overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; -webkit-overflow-scrolling:touch}
-.plates::-webkit-scrollbar{display:none}
-.plate{flex:0 0 74%; scroll-snap-align:center; margin:0}
-.plate img{width:100%; aspect-ratio:9/16; object-fit:cover; background:var(--stone)}
-.plate figcaption{display:flex; align-items:baseline; gap:.5rem; margin-top:.6rem; font:500 9.5px var(--f-ui); letter-spacing:.24em; text-transform:uppercase; color:var(--muted)}
-.plate figcaption b{color:var(--brass); font-weight:500; font-variant-numeric:lining-nums}
-@media (min-width:880px){
-  .plates{display:grid; grid-template-columns:repeat(3,1fr); gap:14px 18px; overflow:visible; margin-right:0; padding-right:0}
-  .plate{flex:none}
-  .plate:nth-child(2),.plate:nth-child(5){transform:translateY(2.6rem)}
-}
-.hint{margin-top:.9rem; font:500 9px var(--f-ui); letter-spacing:.24em; text-transform:uppercase; color:var(--muted)}
-@media (min-width:880px){ .hint{display:none} }
 
 /* ══ REZERVACIJA ══════════════════════════════════════════════════ */
 #rezervacija{background:radial-gradient(90% 46% at 50% -4%,rgba(200,145,47,.13),transparent 62%), var(--stone)}
@@ -359,6 +597,66 @@ footer{border-top:1px solid var(--line); background:var(--stone)}
   .still{display:block; max-width:44rem; margin:0 auto}
   .nav{position:static; background:none; border:0; padding-left:0; padding-right:0}
 }
+/* -- poziv na skrolanje: pojavi se, zadrzi i nestane sam --------- */
+.pozivnik{
+  position:absolute; inset:0; z-index:40; display:grid; place-items:center;
+  pointer-events:none; opacity:0;
+}
+.pozivnik.on{animation:pozivnik 2.8s cubic-bezier(.2,.8,.3,1) forwards}
+.pozivnik .kut{
+  display:flex; flex-direction:column; align-items:center; gap:1.05rem;
+  padding:1.5rem 2.1rem 1.7rem;
+  background:rgba(12,16,20,.82); border:1px solid var(--brass-dim);
+  backdrop-filter:blur(7px) saturate(.9);
+  box-shadow:0 18px 50px rgba(0,0,0,.5);
+}
+.pozivnik span{
+  font:600 10.5px var(--f-ui); letter-spacing:.34em; text-transform:uppercase;
+  color:var(--lime); text-indent:.34em;
+}
+.pozivnik .strelica{
+  display:block; width:13px; height:13px;
+  border-right:1.5px solid var(--brass); border-bottom:1.5px solid var(--brass);
+  transform:rotate(45deg);
+}
+@keyframes pozivnik{
+  0%   { opacity:0; transform:translateY(10px) scale(.97) }
+  14%  { opacity:1; transform:none }
+  74%  { opacity:1; transform:none }
+  100% { opacity:0; transform:translateY(-6px) scale(.99) }
+}
+@media (prefers-reduced-motion:no-preference){
+  .pozivnik.on .strelica{animation:kapni 1.05s ease-in-out .3s 2}
+}
+@keyframes kapni{
+  0%,100%{transform:rotate(45deg) translate(0,0); opacity:.55}
+  50%    {transform:rotate(45deg) translate(3px,3px); opacity:1}
+}
+
+/* -- traka pristanka: ista gradja kao traka prototipa gore -------- */
+.pristanak{
+  position:fixed; left:0; right:0; bottom:0; z-index:90;
+  display:flex; flex-wrap:wrap; align-items:center; gap:.9rem 1.4rem;
+  padding:1rem var(--pad) calc(1rem + var(--sab));
+  background:rgba(14,18,22,.96); border-top:1px solid var(--brass-dim);
+  backdrop-filter:blur(10px);
+  transform:translateY(100%); transition:transform .4s cubic-bezier(.2,.8,.3,1);
+}
+.pristanak.on{transform:none}
+.pristanak p{
+  margin:0; flex:1 1 16rem; font:400 12.5px/1.6 var(--f-ui); color:var(--lime-dim);
+}
+.pristanak .dugmad{display:flex; gap:.6rem; flex:0 0 auto}
+.pristanak button{
+  min-height:var(--tap); padding:.7rem 1.3rem; cursor:pointer;
+  font:600 10px var(--f-ui); letter-spacing:.24em; text-transform:uppercase;
+  border:1px solid var(--line); background:transparent; color:var(--lime-dim);
+}
+.pristanak button:hover{color:var(--lime); border-color:var(--brass-dim)}
+.pristanak .da{background:var(--brass); border-color:var(--brass); color:#120d05}
+.pristanak .da:hover{background:var(--brass-lit); color:#120d05}
+@media (min-width:880px){ .pristanak{justify-content:space-between} }
+
 </style>
 </head>
 <body>
@@ -378,7 +676,6 @@ footer{border-top:1px solid var(--line); background:var(--stone)}
       <div class="brand">PIER</div>
       <div class="nav-r">
         <a class="link" href="#kuhinja" data-i18n="navKuhinja">Kuhinja</a>
-        <a class="link" href="#ploce" data-i18n="navGalerija">Ploče</a>
         <a class="link" href="#rezervacija" data-i18n="navRez">Rezervacija</a>
         <div class="lang">
           <button type="button" data-lang="hr" aria-pressed="true">HR</button>
@@ -433,6 +730,15 @@ footer{border-top:1px solid var(--line); background:var(--stone)}
       <button type="button" class="skip" id="skip" data-i18n="skip">preskoči ↓</button>
     </div>
 
+    <!-- poziv koji se sam javi i sam ode; ne prima klikove,
+         pa nikad ne stoji gostu na putu -->
+    <div class="pozivnik" id="pozivnik" aria-hidden="true">
+      <div class="kut">
+        <span data-i18n="dolje">Skrolaj dolje</span>
+        <i class="strelica"></i>
+      </div>
+    </div>
+
     <div id="loader"><div class="bar"><i id="lbar"></i></div></div>
 
     <!-- zamjena kad je kretanje isključeno -->
@@ -479,22 +785,6 @@ footer{border-top:1px solid var(--line); background:var(--stone)}
           <p data-i18n="r2p">Kameni zid, drvene grede i mekana rasvjeta. Mirnije, zaklonjeno i toplo bez obzira na vrijeme.</p>
         </div>
       </div>
-    </div>
-  </section>
-
-  <section class="sec" id="ploce">
-    <div class="inner">
-      <div class="mark"><span data-i18n="k4">Ploče</span></div>
-      <h2 class="t" data-i18n="galH">Šest <em>pogleda</em></h2>
-      <div class="plates">
-        <figure class="plate"><img src="img/g1-ulaz.webp"   alt="Ulaz u PIER bistro iz kamene kalete" loading="lazy" width="1620" height="2880"><figcaption><b>I</b><span data-i18n="c1">Ulaz</span></figcaption></figure>
-        <figure class="plate"><img src="img/g2-terasa.webp" alt="Terasa sa stolovima u kaleti"        loading="lazy" width="1620" height="2880"><figcaption><b>II</b><span data-i18n="c2">Terasa</span></figcaption></figure>
-        <figure class="plate"><img src="img/g3-sank.webp"   alt="Šank s toplim žaruljama"             loading="lazy" width="1620" height="2880"><figcaption><b>III</b><span data-i18n="c3">Šank</span></figcaption></figure>
-        <figure class="plate"><img src="img/g4-vino.webp"   alt="Police s vinima uz kameni zid"       loading="lazy" width="1620" height="2880"><figcaption><b>IV</b><span data-i18n="c4">Vina</span></figcaption></figure>
-        <figure class="plate"><img src="img/g5-salon.webp"  alt="Salon s kamenim zidom i satom"       loading="lazy" width="1620" height="2880"><figcaption><b>V</b><span data-i18n="c5">Salon</span></figcaption></figure>
-        <figure class="plate"><img src="img/g6-stol.webp"   alt="Postavljeni stol u salonu"           loading="lazy" width="1620" height="2880"><figcaption><b>VI</b><span data-i18n="c6">Stol</span></figcaption></figure>
-      </div>
-      <div class="hint" data-i18n="hint">povuci u stranu →</div>
     </div>
   </section>
 
@@ -662,7 +952,7 @@ var BEATS = [
 var T = {
 hr:{
   protoTxt:"rezervacija se još ne šalje nikamo; označeni podaci čekaju potvrdu.",
-  navKuhinja:"Kuhinja", navGalerija:"Ploče", navRez:"Rezervacija",
+  navKuhinja:"Kuhinja", navRez:"Rezervacija",
   b0sub:"bistro · velo varoš, split",
   b0inv:"Pusti da te odvedemo kroz našu priču.",
   b1:"Kamena kaleta kod crkve sv. Križa",
@@ -674,6 +964,9 @@ hr:{
   b4:"Kamen, drvo i topla svjetlost",
   b4c:"Goli kameni zid, drvene grede i biljke sa stropa. Mramorni stolovi pod žaruljama.",
   b5:"I stol koji te čeka",
+  privTxt:"Koristimo Google Analytics da vidimo koliko ljudi prodje šetnju i rezervira stol. Bez toga ne znamo što popraviti. Ništa se ne dijeli dalje.",
+  privDa:"U redu", privNe:"Samo nužno",
+  dolje:"Skrolaj dolje",
   goRez:"Rezerviraj stol →", cue:"skrolaj", skip:"preskoči ↓", sharp:"oštrija slika",
   chPrilaz:"Prilaz", chUlaz:"Ulaz", chSank:"Šank", chSalon:"Salon",
 
@@ -689,8 +982,6 @@ hr:{
   r1p:"Stolovi u kaleti, pod krošnjom i uličnim svjetlom. Za tople večeri i duge večere na otvorenom.",
   r2n:"Unutar", r2k:"salon",
   r2p:"Kameni zid, drvene grede i mekana rasvjeta. Mirnije, zaklonjeno i toplo bez obzira na vrijeme.",
-  k4:"Ploče", galH:"Šest <em>pogleda</em>", hint:"povuci u stranu →",
-  c1:"Ulaz", c2:"Terasa", c3:"Šank", c4:"Vina", c5:"Salon", c6:"Stol",
 
   k5:"Knjiga", rezH:"Rezerviraj <em>stol</em>",
   sKada:"Gdje i kada", sKoliko:"Koliko vas je", sTko:"Tko dolazi",
@@ -731,7 +1022,7 @@ hr:{
 },
 en:{
   protoTxt:"the reservation is not sent anywhere yet; marked details await confirmation.",
-  navKuhinja:"Kitchen", navGalerija:"Plates", navRez:"Book",
+  navKuhinja:"Kitchen", navRez:"Book",
   b0sub:"bistro · velo varoš, split",
   b0inv:"Let us walk you through our story.",
   b1:"A stone alley by the Church of the Holy Cross",
@@ -743,6 +1034,9 @@ en:{
   b4:"Stone, wood and warm light",
   b4c:"Bare limestone, timber beams and plants from the ceiling. Marble tables under warm bulbs.",
   b5:"And a table waiting for you",
+  privTxt:"We use Google Analytics to see how many people finish the walkthrough and book a table. Without it we do not know what to fix. Nothing is shared further.",
+  privDa:"Fine by me", privNe:"Essential only",
+  dolje:"Scroll down",
   goRez:"Book a table →", cue:"scroll", skip:"skip ↓", sharp:"sharper frames",
   chPrilaz:"Approach", chUlaz:"Entrance", chSank:"Bar", chSalon:"Dining room",
 
@@ -758,8 +1052,6 @@ en:{
   r1p:"Tables in the lane, under the tree and the street lamps. For warm evenings and long dinners in the open.",
   r2n:"Inside", r2k:"dining room",
   r2p:"Stone walls, timber beams and soft light. Quieter, sheltered and warm whatever the weather.",
-  k4:"Plates", galH:"Six <em>views</em>", hint:"swipe →",
-  c1:"Entrance", c2:"Terrace", c3:"Bar", c4:"Wine", c5:"Dining room", c6:"Table",
 
   k5:"The book", rezH:"Book a <em>table</em>",
   sKada:"Where and when", sKoliko:"How many of you", sTko:"Who is coming",
@@ -819,6 +1111,7 @@ var Walk = (function(){
   var beats = [].slice.call(document.querySelectorAll('.beat'));
   var hi = new Array(HI), hiOk = new Array(HI), lo = new Array(LO), loOk = new Array(LO);
   var lastKey = '', loDone = 0, aktivno = -1;
+  var krenulo = false, zavrseno = false, pocetak = Date.now();
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   var conn = navigator.connection || {};
   var thrifty = conn.saveData === true || /^(slow-)?2g$/.test(conn.effectiveType || '');
@@ -872,6 +1165,20 @@ var Walk = (function(){
       b.addEventListener('click', function(){ skoci(POGLAVLJA[+b.dataset.i].od); });
     });
   }
+  /* poziv se javi kratko nakon sto se slika pojavi; ako je gost
+     vec krenuo skrolati, nema ga sto podsjecati */
+  function pozovi(){
+    if (reduce) return;
+    var el = document.getElementById('pozivnik');
+    if (!el || progress() > 0.004) { if (el) el.remove(); return; }
+    setTimeout(function(){
+      if (progress() > 0.004){ el.remove(); return; }
+      el.classList.add('on');
+      MJ.dog('scroll_hint_shown', {});
+      setTimeout(function(){ el.remove(); }, 2900);
+    }, 700);
+  }
+
   function skoci(p){
     var top = walk.getBoundingClientRect().top + window.pageYOffset;
     window.scrollTo({ top: top + p*span() + 2, behavior:'smooth' });
@@ -906,10 +1213,28 @@ var Walk = (function(){
       rail.querySelectorAll('.ch').forEach(function(b,bi){
         b.setAttribute('aria-current', bi === akt ? 'true' : 'false');
       });
+      MJ.dog('walkthrough_chapter', {
+        poglavlje: POGLAVLJA[akt].rn + ' ' + POGLAVLJA[akt].k.replace('ch',''),
+        redni_broj: akt + 1,
+        napredak: Math.round(p*100)
+      });
     }
     progFill.style.height = (p*100).toFixed(1) + '%';
 
     cue.style.opacity = Math.max(0, 1 - p*7);
+
+    /* setnja: pocetak i kraj, svaki jednom po posjetu */
+    if (!krenulo && p > 0.02){
+      krenulo = true;
+      MJ.dog('walkthrough_start', { serija: thrifty ? 'samo_brza' : 'ostra' });
+    }
+    if (!zavrseno && p > 0.995){
+      zavrseno = true;
+      MJ.dog('walkthrough_complete', {
+        sekundi: Math.round((Date.now() - pocetak)/1000)
+      });
+    }
+
     var past = p > 0.995;
     nav.classList.toggle('fixed', past);
     cta.classList.toggle('on', past);
@@ -931,6 +1256,7 @@ var Walk = (function(){
     if (reduce){ crtajMirno(); return; }
     grab(srcLo(0), lo, loOk, 0, function(){
       fit(); loader.classList.add('gone');
+      pozovi();
       var n = 1;
       function nextLo(){
         if (n >= LO) return startHi();
@@ -965,6 +1291,7 @@ var Walk = (function(){
   }
 
   document.getElementById('skip').addEventListener('click', function(){
+    MJ.dog('walkthrough_skip', { napredak: Math.round(progress()*100) });
     var el = document.getElementById('prica');
     window.scrollTo({ top: el.getBoundingClientRect().top + window.pageYOffset, behavior:'smooth' });
   });
@@ -1081,9 +1408,20 @@ function osvjezi(){
 [elSek, elDatum, elVrij, elOd, elDj].forEach(function(el){
   el.addEventListener('change', function(){ if (el === elDatum) punjenjeTermina(); osvjezi(); });
 });
+/* prvi dodir forme broji se kao pocetak rezervacije */
+var rezKrenula = false;
+form.addEventListener('input', function(e){
+  if (rezKrenula) return;
+  rezKrenula = true;
+  MJ.dog('reservation_start', { prvo_polje: (e.target && e.target.id) || '(nepoznato)' });
+}, true);
+
 form.addEventListener('submit', function(e){
   e.preventDefault();
-  if (!form.checkValidity()){ form.reportValidity(); return; }
+  if (!form.checkValidity()){
+    MJ.dog('reservation_invalid', {});
+    form.reportValidity(); return;
+  }
   var od = +elOd.value || 0, dj = +elDj.value || 0, uk = od + dj;
   var info = radnoZa(elDatum.value);
   var rows = [
@@ -1101,6 +1439,18 @@ form.addEventListener('submit', function(e){
   elSaid.style.display = 'none';
   document.getElementById('done').classList.add('on');
   document.getElementById('done').scrollIntoView({block:'center'});
+
+  MJ.dog('reservation_submit', {
+    sekcija:   elSek.value,
+    gosti:     uk,
+    odrasli:   od,
+    djeca:     dj,
+    sat:       elVrij.value,
+    dana_unaprijed: Math.round(
+      (new Date(elDatum.value + 'T12:00:00') - new Date()) / 864e5),
+    dan_u_tjednu: t('daniK')[info.wd],
+    jezik:     lang
+  });
 });
 
 /* ══ 4. Dolazak ═══════════════════════════════════════════════════ */
@@ -1189,8 +1539,18 @@ function primijeniJezik(){
   Walk.refresh();
 }
 document.querySelectorAll('.lang button').forEach(function(b){
-  b.addEventListener('click', function(){ lang = b.dataset.lang; primijeniJezik(); });
+  b.addEventListener('click', function(){
+    lang = b.dataset.lang; primijeniJezik();
+    MJ.dog('language_switch', { jezik: lang });
+  });
 });
+
+/* ?lang=en otvara stranicu odmah na engleskom — time hreflang
+   iz glave dokumenta stvarno vodi na englesku verziju */
+(function(){
+  var m = /[?&]lang=(hr|en)/.exec(location.search);
+  if (m && m[1] !== lang){ lang = m[1]; }
+})();
 
 (function(){
   var now = new Date();
@@ -1208,6 +1568,139 @@ document.querySelectorAll('.lang button').forEach(function(b){
   Walk.start();
   Walk.fit(); Walk.onScroll();
   setInterval(renderStatus, 60000);
+})();
+
+/* == 6. Mjerenje: ostatak ==========================================
+   Modul MJ (gore u glavi dokumenta) zna tko gleda i salje li se
+   igdje. Ovdje su zakacene mjere koje imaju smisla za restoran:
+   koliko ljudi prodje setnju, gdje stanu, tko dotakne formu,
+   tko zove, i koliko je stranica brza na njihovom uredjaju.      */
+(function(){
+
+  /* -- Core Web Vitals ---------------------------------------------
+     Bez vanjske biblioteke: LCP, CLS, INP, FCP i TTFB citamo
+     ravno iz PerformanceObservera i saljemo jednom, kad gost
+     napusti stranicu ili je prebaci u pozadinu.                   */
+  var PRAG = {
+    LCP: [2500, 4000], FCP: [1800, 3000], TTFB: [800, 1800],
+    INP: [200, 500],   CLS: [100, 250]
+  };
+  function ocjena(ime, v){
+    var p = PRAG[ime]; if (!p) return 'nepoznato';
+    return v <= p[0] ? 'dobro' : (v <= p[1] ? 'moze_bolje' : 'lose');
+  }
+  var mjere = {}, poslano = false;
+  function zapisi(ime, v){ if (mjere[ime] === undefined || v > mjere[ime]) mjere[ime] = v; }
+
+  function gledaj(vrsta, fn, opcije){
+    try {
+      var o = new PerformanceObserver(fn);
+      o.observe(opcije || { type: vrsta, buffered: true });
+      return o;
+    } catch(e){ return null; }
+  }
+
+  var oLcp = gledaj('largest-contentful-paint', function(l){
+    var e = l.getEntries(); if (e.length) zapisi('LCP', e[e.length-1].startTime);
+  });
+
+  /* CLS po sesijskim prozorima, kako Google i racuna */
+  var clsUk = 0, sesija = 0, prviPom = 0, zadnjiPom = 0;
+  gledaj('layout-shift', function(l){
+    l.getEntries().forEach(function(en){
+      if (en.hadRecentInput) return;
+      if (sesija && en.startTime - zadnjiPom < 1000 && en.startTime - prviPom < 5000){
+        sesija += en.value; zadnjiPom = en.startTime;
+      } else {
+        sesija = en.value; prviPom = zadnjiPom = en.startTime;
+      }
+      if (sesija > clsUk) clsUk = sesija;
+    });
+  });
+
+  gledaj('event', function(l){
+    l.getEntries().forEach(function(en){
+      if (en.interactionId) zapisi('INP', en.duration);
+    });
+  }, { type:'event', buffered:true, durationThreshold:40 });
+
+  gledaj('paint', function(l){
+    l.getEntries().forEach(function(en){
+      if (en.name === 'first-contentful-paint') zapisi('FCP', en.startTime);
+    });
+  });
+
+  function salji(){
+    if (poslano) return; poslano = true;
+    try { if (oLcp){ oLcp.takeRecords(); oLcp.disconnect(); } } catch(e){}
+    try {
+      var nav = performance.getEntriesByType('navigation')[0];
+      if (nav) zapisi('TTFB', nav.responseStart);
+    } catch(e){}
+    if (clsUk) mjere.CLS = Math.round(clsUk * 1000);   /* CLS u tisucinkama */
+
+    Object.keys(mjere).forEach(function(ime){
+      var v = Math.round(mjere[ime]);
+      MJ.dog('web_vitals', {
+        metrika: ime,
+        vrijednost: v,
+        ocjena: ocjena(ime, v),
+        veza: (navigator.connection || {}).effectiveType || '(nepoznato)',
+        dpr: window.devicePixelRatio || 1,
+        sirina: window.innerWidth
+      });
+    });
+  }
+  addEventListener('visibilitychange', function(){
+    if (document.visibilityState === 'hidden') salji();
+  });
+  addEventListener('pagehide', salji);
+
+  /* -- koje sekcije gost stvarno vidi ------------------------------ */
+  if ('IntersectionObserver' in window){
+    var vidjeno = {};
+    var io = new IntersectionObserver(function(unosi){
+      unosi.forEach(function(u){
+        if (!u.isIntersecting) return;
+        var id = u.target.id || '(bez imena)';
+        if (vidjeno[id]) return;
+        vidjeno[id] = true;
+        MJ.dog('section_view', { sekcija: id });
+      });
+    }, { threshold: 0.4 });
+    document.querySelectorAll('section[id]').forEach(function(el){ io.observe(el); });
+  }
+
+  /* -- kontakt: najvazniji ishod poslije rezervacije --------------- */
+  document.addEventListener('click', function(e){
+    var a = e.target.closest && e.target.closest('a[href]');
+    if (!a) return;
+    var h = a.getAttribute('href') || '';
+    if (h.indexOf('tel:') === 0)         MJ.dog('contact_click', { nacin:'telefon' });
+    else if (h.indexOf('mailto:') === 0) MJ.dog('contact_click', { nacin:'email' });
+    else if (/maps\.google|goo\.gl\/maps|maps\.app/.test(h))
+                                         MJ.dog('contact_click', { nacin:'karta' });
+    else if (h === '#rezervacija')       MJ.dog('cta_click', { odakle: a.className || 'veza' });
+  });
+
+  /* -- traka pristanka --------------------------------------------- */
+  if (MJ.pristanak() === null){
+    var tr = document.createElement('div');
+    tr.className = 'pristanak';
+    tr.setAttribute('role', 'dialog');
+    tr.setAttribute('aria-label', 'Kolacici');
+    tr.innerHTML =
+      '<p data-i18n="privTxt">' + t('privTxt') + '</p>' +
+      '<div class="dugmad">' +
+        '<button type="button" class="ne" data-i18n="privNe">' + t('privNe') + '</button>' +
+        '<button type="button" class="da" data-i18n="privDa">' + t('privDa') + '</button>' +
+      '</div>';
+    document.body.appendChild(tr);
+    requestAnimationFrame(function(){ tr.classList.add('on'); });
+    tr.querySelector('.da').addEventListener('click', function(){ MJ.prihvati(true);  tr.remove(); });
+    tr.querySelector('.ne').addEventListener('click', function(){ MJ.prihvati(false); tr.remove(); });
+  }
+
 })();
 </script>
 </body>
