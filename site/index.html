@@ -44,7 +44,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://www.googletagmanager.com">
-<link rel="preload" as="image" href="frames/lo/f0001.webp">
+<link rel="preload" as="image" href="frames/lo/f0001.webp?v=2" fetchpriority="high">
 
 <!-- ══ Strukturirani podaci ══════════════════════════════════
      Ovo Google čita kao činjenice o restoranu i može ih pokazati
@@ -743,7 +743,7 @@ footer{border-top:1px solid var(--line); background:var(--stone)}
 
     <!-- zamjena kad je kretanje isključeno -->
     <div class="still" id="still">
-      <img src="img/poster.webp" alt="PIER bistro, ulaz iz kamene kalete" width="1440" height="2560">
+      <img src="img/poster.webp?v=2" alt="PIER bistro, ulaz iz kamene kalete" width="1440" height="2560">
       <div id="stillList"></div>
     </div>
   </div>
@@ -1116,8 +1116,12 @@ var Walk = (function(){
   var conn = navigator.connection || {};
   var thrifty = conn.saveData === true || /^(slow-)?2g$/.test(conn.effectiveType || '');
 
-  function srcHi(i){ return 'frames/hi/f' + String(i+1).padStart(4,'0') + '.webp'; }
-  function srcLo(i){ return 'frames/lo/f' + String(i+1).padStart(4,'0') + '.webp'; }
+  /* biljeg izdanja: okviri se kesiraju kao nepromjenjivi, pa im se
+     pri svakoj novoj seriji mora promijeniti adresa, inace povratnik
+     zauvijek gleda staru snimku */
+  var IZDANJE = '2';
+  function srcHi(i){ return 'frames/hi/f' + String(i+1).padStart(4,'0') + '.webp?v=' + IZDANJE; }
+  function srcLo(i){ return 'frames/lo/f' + String(i+1).padStart(4,'0') + '.webp?v=' + IZDANJE; }
 
   function fit(){
     var dpr = Math.min(window.devicePixelRatio || 1, 3);
