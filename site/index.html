@@ -1114,6 +1114,9 @@ var Walk = (function(){
   var hi = new Array(HI), hiOk = new Array(HI), lo = new Array(LO), loOk = new Array(LO);
   var lastKey = '', loDone = 0, aktivno = -1;
   var pCilj = 0, pSad = 0, tece = false;
+  var brzina = 0, vrh = 0, vrhSmjer = 1, kadZadnji = 0, tajmer = null, nosimo = false;
+  var NAJDALJE = 9;           /* najvise okvira koliko zamah ponese */
+  var PRAG = 3.0;             /* ispod toga je obican skrol, ne zamah */
   var krenulo = false, zavrseno = false, pocetak = Date.now();
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   var conn = navigator.connection || {};
@@ -1257,7 +1260,7 @@ var Walk = (function(){
       });
     }
 
-    var past = p > 0.995;
+    var past = pCilj > 0.995;
     nav.classList.toggle('fixed', past);
     cta.classList.toggle('on', past);
     document.body.classList.toggle('cta-on', past);
@@ -1266,16 +1269,62 @@ var Walk = (function(){
   /* Skrol ne gura sliku izravno nego vuce metu; prikaz je stize
      u koracima. Fling tako ne preskace okvire, a cijeli hero -
      slika, tekst i letvica - putuje kao jedna cjelina.          */
+  /* Skrol ne gura sliku izravno nego vuce metu koju prikaz stize u
+     koracima; fling tako ne preskoci okvire.                       */
   function petlja(){
     var d = pCilj - pSad;
     if (Math.abs(d) < 0.0003){ pSad = pCilj; render(pSad); tece = false; return; }
-    pSad += d * 0.22;
+    pSad += d * 0.26;
     render(pSad);
     requestAnimationFrame(petlja);
   }
+
   function onScroll(){
-    pCilj = progress();
+    var sada = (window.performance && performance.now) ? performance.now() : Date.now();
+    var novi = progress();
+    var dt = Math.max(8, Math.min(120, sada - kadZadnji));
+    brzina = (novi - pCilj) * 16 / dt;      /* napredak po kadru */
+    kadZadnji = sada;
+    pCilj = novi;
+
+    /* vrh zamaha pamtimo kroz cijelu gestu, jer je u trenutku kad
+       skrol stane brzina vec pala na nulu */
+    if (!nosimo){
+      var v = Math.abs(brzina);
+      if (v >= vrh){ vrhSmjer = brzina > 0 ? 1 : -1; }
+      /* sporo blijedi: dok prirodna inercija mobitela istrci svoje,
+         vrh mora prezivjeti da ga uopce imamo cime iskoristiti */
+      vrh = Math.max(v, vrh * 0.98);
+    }
+
     if (!tece){ tece = true; requestAnimationFrame(petlja); }
+    if (tajmer) clearTimeout(tajmer);
+    tajmer = setTimeout(ponesi, 110);
+  }
+
+  /* Kad skrol stane, zamah prsta se ne baca: setnja se ponese jos
+     koji okvir, onoliko koliko je zamah bio jak. Gura se pravi
+     skrol, ne samo slika - zato se nista ne vraca natrag.        */
+  function ponesi(){
+    tajmer = null;
+    if (reduce || nosimo){ vrh = 0; return; }
+    var p = progress();
+    if (p < 0.004 || p > 0.994){ vrh = 0; return; }
+
+    var okvira = Math.min(NAJDALJE, vrh * (HI - 1) * 1.9);
+    vrh = 0;
+    if (okvira < PRAG) return;              /* blagi skrol se ne nosi */
+
+    /* ne guraj preko ruba setnje */
+    var korak = span() / (HI - 1);
+    var ostalo = (vrhSmjer > 0 ? (1 - p) : p) * span();
+    var px = vrhSmjer * Math.min(okvira * korak, ostalo);
+    if (Math.abs(px) < 2) return;
+
+    nosimo = true;
+    try { window.scrollBy({ top: px, behavior: 'smooth' }); }
+    catch(e){ window.scrollBy(0, px); }
+    setTimeout(function(){ nosimo = false; }, 620);
   }
 
   function grab(url, store, flags, idx, done){

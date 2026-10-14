@@ -31,10 +31,20 @@ prvo svaki drugi okvir (16 MB) — što je već upotrebljiva šetnja — pa
 ostatak (još 16 MB), koji je dopuni do glatkog. Na `saveData` ili 2G
 oštra se uopće ne pokreće; na 3G stane nakon prvog prolaza.
 
-Kretanje je glačano na dva načina: skrol ne gura sliku izravno nego
-vuče metu koju prikaz stiže u koracima (fling ne preskoči okvire), a
-dvije susjedne slike se pretapaju po razlomku položaja, pa sitni skok
-između okvira nestane bez ijednog novog bajta.
+Kretanje je glačano na tri načina:
+
+1. Skrol ne gura sliku izravno nego vuče metu koju prikaz stiže u
+   koracima — fling tako ne preskoči okvire.
+2. Dvije susjedne slike se pretapaju po razlomku položaja, pa sitni
+   skok između okvira nestane bez ijednog novog bajta.
+3. **Zamah prsta se ne baca.** Kad skrol stane, šetnja se ponese još
+   do devet okvira, razmjerno tome koliko je zamah bio jak. Gura se
+   *pravi skrol* (`scrollBy`), ne samo slika — prvi pokušaj je sliku
+   puštao ispred skrola, ali se onda nakon naglog stopa vraćala 2,6
+   okvira natrag, što se na kadru kamere koja hoda vidi kao trzaj.
+
+   Ugođeno tako da sporo čitanje ne pomiče ništa, srednji zamah nosi
+   ~4 okvira, a jak ~8. Nikad izvan granica šetnje.
 
 Adresa okvira nosi biljeg izdanja (`?v=3`). Okviri se keširaju kao
 nepromjenjivi na godinu dana, pa se pri svakoj novoj seriji biljeg
