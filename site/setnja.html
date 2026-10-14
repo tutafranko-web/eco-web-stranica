@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="hr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>PIER — šetnja prostorom</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#06080a">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="image" href="frames/lo/f0001.webp?v=3" fetchpriority="high">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;1,9..144,200&family=Archivo:wght@400;500;600&display=swap">
+<style>
+/* ══════════════════════════════════════════════════════════════════
+   PIER — šetnja prostorom, proba.
+
+   Nije rekonstruirana geometrija nego snimljena putanja kojom gost
+   sam upravlja: naprijed i natrag po stvarnom kadru, pogled okolo
+   unutar slike. Hod ima zalet i kočenje, korak lagano njiše sliku,
+   a prostorije su točke na putu do kojih se putuje.
+   ══════════════════════════════════════════════════════════════════ */
+:root{
+  --ink:#06080a; --line:#242b31;
+  --lime:#ece7db; --lime-dim:#a7a093; --muted:#6c7982;
+  --brass:#c8912f; --brass-lit:#e2b14e;
+  --f-disp:"Fraunces",Georgia,"Times New Roman",serif;
+  --f-ui:"Archivo","Segoe UI",system-ui,sans-serif;
+  --pad:1.1rem; --sat:env(safe-area-inset-top,0px); --sab:env(safe-area-inset-bottom,0px);
+}
+@media (min-width:760px){ :root{ --pad:1.9rem } }
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; background:var(--ink); color:var(--lime);
+  font:400 15px/1.55 var(--f-ui);
+  overflow:hidden; overscroll-behavior:none;
+  -webkit-user-select:none; user-select:none; touch-action:none;
+}
+
+/* ── pogled ───────────────────────────────────────────────────── */
+#scena{position:fixed; inset:0; background:#000}
+#kadar{display:block; width:100%; height:100%}
+.vinjeta{
+  position:fixed; inset:0; pointer-events:none; z-index:2;
+  background:
+    radial-gradient(130% 78% at 50% 50%,transparent 44%,rgba(4,6,8,.62) 100%),
+    linear-gradient(180deg,rgba(6,8,10,.72) 0%,rgba(6,8,10,0) 20%),
+    linear-gradient(0deg,rgba(6,8,10,.80) 0%,rgba(6,8,10,0) 26%);
+}
+
+/* ── natpisi ──────────────────────────────────────────────────── */
+.hud{position:fixed; z-index:6; pointer-events:none}
+.hud.gore{
+  top:calc(var(--pad) + var(--sat)); left:var(--pad); right:var(--pad);
+  display:flex; align-items:flex-start; justify-content:space-between; gap:1rem;
+}
+.znak{font-family:var(--f-disp); font-weight:300; font-size:15px; letter-spacing:.42em; text-indent:.42em}
+.znak small{
+  display:block; margin-top:.45rem; font:500 8.5px var(--f-ui);
+  letter-spacing:.3em; text-transform:uppercase; color:var(--brass); text-indent:.3em;
+}
+.gdje{text-align:right}
+.gdje .rn{font:500 8.5px var(--f-ui); letter-spacing:.3em; color:var(--brass); text-indent:.3em}
+.gdje .nm{
+  font-family:var(--f-disp); font-weight:200; font-style:italic;
+  font-size:clamp(1.15rem,5.4vw,1.6rem); line-height:1.2; margin-top:.2rem;
+  transition:opacity .35s;
+}
+a.izlaz{
+  position:fixed; z-index:7; top:calc(var(--pad) + var(--sat)); left:50%; transform:translateX(-50%);
+  font:600 8.5px var(--f-ui); letter-spacing:.26em; text-transform:uppercase;
+  color:var(--muted); text-decoration:none; padding:.6rem .9rem; pointer-events:auto;
+}
+a.izlaz:hover{color:var(--lime)}
+
+/* ── traka puta ───────────────────────────────────────────────── */
+.put{
+  position:fixed; z-index:6; left:var(--pad); right:var(--pad);
+  bottom:calc(var(--pad) + var(--sab) + 4.6rem);
+  height:30px; display:flex; align-items:center; pointer-events:auto;
+}
+@media (min-width:760px){ .put{bottom:calc(var(--pad) + var(--sab) + 1.2rem)} }
+.put .traka{position:relative; flex:1; height:1px; background:#2b333a}
+.put .prijedjeno{position:absolute; left:0; top:0; height:100%; background:var(--brass); width:0}
+.put .ja{
+  position:absolute; top:50%; width:9px; height:9px; margin:-4.5px 0 0 -4.5px;
+  background:var(--brass-lit); border-radius:50%; box-shadow:0 0 0 4px rgba(200,145,47,.18);
+}
+.put .soba{
+  position:absolute; top:50%; width:30px; height:30px; margin:-15px 0 0 -15px;
+  background:none; border:0; padding:0; cursor:pointer;
+}
+.put .soba::before{
+  content:""; position:absolute; left:50%; top:50%; width:5px; height:5px;
+  margin:-2.5px 0 0 -2.5px; border:1px solid var(--muted); transform:rotate(45deg);
+  transition:border-color .2s, background .2s;
+}
+.put .soba:hover::before,.put .soba[aria-current="true"]::before{
+  border-color:var(--brass-lit); background:var(--brass-lit);
+}
+.put .soba span{
+  position:absolute; bottom:22px; left:50%; transform:translateX(-50%);
+  font:500 8px var(--f-ui); letter-spacing:.2em; text-transform:uppercase;
+  color:var(--muted); white-space:nowrap; opacity:0; transition:opacity .2s;
+}
+.put .soba:hover span,.put .soba[aria-current="true"] span{opacity:1}
+
+/* ── upute i tipke ────────────────────────────────────────────── */
+.upute{
+  position:fixed; z-index:6; left:var(--pad); bottom:calc(var(--pad) + var(--sab));
+  font:500 8.5px/2 var(--f-ui); letter-spacing:.2em; text-transform:uppercase;
+  color:var(--muted); pointer-events:none;
+}
+.upute b{color:var(--lime-dim); font-weight:600}
+.upute kbd{
+  display:inline-block; min-width:17px; padding:1px 4px; margin:0 1px;
+  border:1px solid #333c44; color:var(--lime-dim); font:600 8.5px var(--f-ui);
+  text-align:center; border-radius:2px;
+}
+
+/* prstom: gaz lijevo, pogled desno */
+.gaz{
+  position:fixed; z-index:6; left:var(--pad); bottom:calc(var(--pad) + var(--sab) + .4rem);
+  width:112px; height:112px; border-radius:50%; border:1px solid var(--line);
+  background:rgba(10,14,18,.4); backdrop-filter:blur(4px);
+  display:none; place-items:center; touch-action:none;
+}
+.gaz i{
+  position:absolute; width:42px; height:42px; border-radius:50%;
+  background:rgba(200,145,47,.85); transition:transform .08s linear;
+}
+.gaz u{
+  position:absolute; left:50%; transform:translateX(-50%); font-style:normal;
+  color:var(--muted); font:600 9px var(--f-ui); letter-spacing:.2em;
+}
+.gaz u.g{top:7px} .gaz u.d{bottom:7px}
+body.dodir .gaz{display:grid}
+body.dodir .upute{display:none}
+/* gaz je visok 7rem, traka mora iznad njega */
+body.dodir .put{bottom:calc(var(--pad) + var(--sab) + 8.8rem)}
+
+/* ── učitavanje ───────────────────────────────────────────────── */
+#uvod{
+  position:fixed; inset:0; z-index:20; display:grid; place-items:center;
+  background:var(--ink); transition:opacity .6s ease;
+  padding:2rem; text-align:center;
+}
+#uvod.gone{opacity:0; pointer-events:none}
+#uvod .mid{max-width:26rem}
+#uvod h1{
+  font-family:var(--f-disp); font-weight:200; font-size:clamp(1.7rem,7vw,2.4rem);
+  margin:0 0 .9rem; line-height:1.15;
+}
+#uvod h1 em{font-style:italic; color:var(--brass-lit)}
+#uvod p{color:var(--lime-dim); font-size:13.5px; margin:0 0 1.9rem}
+#uvod .bar{width:120px; height:1px; background:#242b31; margin:0 auto 1.3rem; overflow:hidden}
+#uvod .bar i{display:block; height:100%; width:3%; background:var(--brass); transition:width .3s}
+#uvod .proba{
+  font:500 8.5px var(--f-ui); letter-spacing:.26em; text-transform:uppercase; color:var(--muted);
+}
+.krenimo{
+  appearance:none; cursor:pointer; margin-top:.4rem;
+  background:var(--brass); border:0; color:#120d05;
+  font:600 10px var(--f-ui); letter-spacing:.3em; text-transform:uppercase;
+  padding:1rem 1.8rem; min-height:48px;
+}
+.krenimo:hover{background:var(--brass-lit)}
+.krenimo[disabled]{background:#2a3138; color:var(--muted); cursor:default}
+
+@media (prefers-reduced-motion:reduce){
+  .put .soba span{transition:none}
+}
+</style>
+</head>
+<body>
+
+<div id="scena"><canvas id="kadar"></canvas></div>
+<div class="vinjeta"></div>
+
+<a class="izlaz" href="/">← natrag</a>
+
+<div class="hud gore">
+  <div class="znak">PIER<small>šetnja prostorom</small></div>
+  <div class="gdje"><div class="rn" id="rn">I</div><div class="nm" id="nm">Prilaz</div></div>
+</div>
+
+<div class="put">
+  <div class="traka" id="traka">
+    <i class="prijedjeno" id="prijedjeno"></i>
+    <i class="ja" id="ja"></i>
+  </div>
+</div>
+
+<div class="upute">
+  <b>hod</b> <kbd>W</kbd><kbd>S</kbd> ili <kbd>↑</kbd><kbd>↓</kbd> &nbsp;·&nbsp;
+  <b>pogled</b> povuci mišem &nbsp;·&nbsp; <b>trk</b> <kbd>⇧</kbd>
+</div>
+
+<div class="gaz" id="gaz"><u class="g">naprijed</u><i id="palac"></i><u class="d">natrag</u></div>
+
+<div id="uvod">
+  <div class="mid">
+    <h1>Prošeći <em>sam</em></h1>
+    <p>
+      Ovo je stvarna snimka prostora, ali kretanjem upravljaš ti —
+      naprijed, natrag, pogled okolo. Nije rekonstruirana geometrija
+      nego put kojim je kamera prošla.
+    </p>
+    <div class="bar"><i id="ubar"></i></div>
+    <button type="button" class="krenimo" id="krenimo" disabled>Učitavam…</button>
+    <p style="margin:1.6rem 0 0"><span class="proba">proba · nije dio stranice</span></p>
+  </div>
+</div>
+
+<script>
+/* ══ Šetnja ════════════════════════════════════════════════════════
+   Položaj t ide 0–1 po snimljenoj putanji. Tipke i prst ne pomiču t
+   izravno nego brzinu: hod se pokrene sa zaletom i stane kočenjem,
+   pa se kretanje osjeti kao hod a ne kao klizač.                   */
+var SOBE = [
+  { rn:"I",   nm:"Prilaz",  t:0.000 },
+  { rn:"II",  nm:"Prag",    t:0.314 },
+  { rn:"III", nm:"Šank",    t:0.516 },
+  { rn:"IV",  nm:"Vina",    t:0.652 },
+  { rn:"V",   nm:"Salon",   t:0.731 },
+  { rn:"VI",  nm:"Stol",    t:0.880 }
+];
+
+var HI = 400, LO = 50, IZDANJE = '3';
+var ZOOM = 1.17;          /* malo uvećamo da ima kamo gledati okolo */
+var BRZINA = 0.00075;     /* napredak po kadru; cijeli put ~22 s    */
+var TRK = 2.05;
+var ZALET = 0.085, KOCNICA = 0.14;
+
+var cv = document.getElementById('kadar');
+var ctx = cv.getContext('2d', { alpha:false });
+var uvod = document.getElementById('uvod'), ubar = document.getElementById('ubar');
+var krenimo = document.getElementById('krenimo');
+var elRn = document.getElementById('rn'), elNm = document.getElementById('nm');
+var traka = document.getElementById('traka');
+var prijedjeno = document.getElementById('prijedjeno'), ja = document.getElementById('ja');
+var gaz = document.getElementById('gaz'), palac = document.getElementById('palac');
+
+var hi = new Array(HI), hiOk = new Array(HI);
+var lo = new Array(LO), loOk = new Array(LO);
+
+var t = 0, v = 0, cilj = 0;          /* položaj, brzina, željena brzina */
+var yaw = 0, pitch = 0;              /* pogled, -1..1                   */
+var yawC = 0, pitchC = 0;
+var korak = 0;                       /* faza njihaja                    */
+var putuje = null;                   /* kad se putuje klikom na sobu    */
+var soba = -1, radi = false;
+
+function sHi(i){ return 'frames/hi/f' + String(i+1).padStart(4,'0') + '.webp?v=' + IZDANJE; }
+function sLo(i){ return 'frames/lo/f' + String(i+1).padStart(4,'0') + '.webp?v=' + IZDANJE; }
+
+/* ── platno ─────────────────────────────────────────────────────── */
+function fit(){
+  var dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+  cv.width  = Math.round(window.innerWidth  * dpr);
+  cv.height = Math.round(window.innerHeight * dpr);
+  crtaj();
+}
+function polozi(img, alfa, px, py){
+  var cw = cv.width, ch = cv.height, iw = img.naturalWidth, ih = img.naturalHeight;
+  var s = Math.max(cw/iw, ch/ih) * ZOOM;
+  var vw = iw*s, vh = ih*s;
+  /* koliko ima zraka za gledanje okolo u svakoj osi */
+  var zrakX = Math.max(0, (vw - cw) / 2), zrakY = Math.max(0, (vh - ch) / 2);
+  ctx.globalAlpha = alfa;
+  ctx.drawImage(img, (cw - vw)/2 + px*zrakX, (ch - vh)/2 + py*zrakY, vw, vh);
+  ctx.globalAlpha = 1;
+}
+function uzmi(i){
+  if (hiOk[i]) return hi[i];
+  for (var d = 1; d <= 4; d++){
+    if (i-d >= 0 && hiOk[i-d]) return hi[i-d];
+    if (i+d < HI && hiOk[i+d]) return hi[i+d];
+  }
+  var l = Math.min(LO-1, Math.max(0, Math.round(i / (HI/LO))));
+  if (loOk[l]) return lo[l];
+  for (var e = 1; e < LO; e++){
+    if (l-e >= 0 && loOk[l-e]) return lo[l-e];
+    if (l+e < LO && loOk[l+e]) return lo[l+e];
+  }
+  return null;
+}
+function crtaj(){
+  var x = Math.min(HI-1, Math.max(0, t*(HI-1)));
+  var i = Math.floor(x), f = x - i;
+  var a = uzmi(i), b = uzmi(Math.min(HI-1, i+1));
+  if (!a) return;
+
+  /* korak lagano njiše sliku — bez toga hod izgleda kao vožnja */
+  var jacina = Math.min(1, Math.abs(v) / BRZINA);
+  var njihX = Math.sin(korak) * 0.012 * jacina;
+  var njihY = Math.abs(Math.cos(korak)) * 0.016 * jacina;
+
+  var px = Math.max(-1, Math.min(1, yawC + njihX));
+  var py = Math.max(-1, Math.min(1, pitchC + njihY));
+
+  ctx.fillStyle = '#000'; ctx.fillRect(0, 0, cv.width, cv.height);
+  polozi(a, 1, px, py);
+  if (b && b !== a && f > 0.02) polozi(b, f, px, py);
+}
+
+/* ── tko je gdje ────────────────────────────────────────────────── */
+function osvjeziHud(){
+  var k = 0;
+  for (var i = 0; i < SOBE.length; i++) if (t >= SOBE[i].t - 0.012) k = i;
+  if (k !== soba){
+    soba = k;
+    elNm.style.opacity = 0;
+    setTimeout(function(){
+      elRn.textContent = SOBE[soba].rn;
+      elNm.textContent = SOBE[soba].nm;
+      elNm.style.opacity = 1;
+    }, 160);
+    traka.querySelectorAll('.soba').forEach(function(b, bi){
+      b.setAttribute('aria-current', bi === soba ? 'true' : 'false');
+    });
+  }
+  prijedjeno.style.width = (t*100).toFixed(1) + '%';
+  ja.style.left = (t*100).toFixed(1) + '%';
+}
+
+/* ── petlja ─────────────────────────────────────────────────────── */
+var zadnji = 0;
+function petlja(ts){
+  var dt = zadnji ? Math.min(3, (ts - zadnji) / 16.667) : 1;
+  zadnji = ts;
+
+  if (putuje){
+    /* putovanje do sobe: krene, ubrza, pa usporeno sjedne */
+    var d = putuje.cilj - t;
+    if (Math.abs(d) < 0.0008){ t = putuje.cilj; putuje = null; v = 0; }
+    else { v = d * 0.055 * dt; t += v; }
+  } else {
+    var raz = cilj - v;
+    v += raz * (Math.abs(cilj) > Math.abs(v) ? ZALET : KOCNICA) * dt;
+    if (Math.abs(v) < 0.000004) v = 0;
+    t += v * dt;
+    if (t < 0){ t = 0; v = 0; }
+    if (t > 1){ t = 1; v = 0; }
+  }
+
+  korak += Math.abs(v) / BRZINA * 0.42 * dt;
+  yawC   += (yaw - yawC) * 0.12 * dt;
+  pitchC += (pitch - pitchC) * 0.12 * dt;
+
+  crtaj();
+  osvjeziHud();
+  requestAnimationFrame(petlja);
+}
+
+/* ── tipkovnica ─────────────────────────────────────────────────── */
+var tipke = {};
+function osvjeziCilj(){
+  var naprijed = tipke['w'] || tipke['arrowup'];
+  var natrag   = tipke['s'] || tipke['arrowdown'];
+  var mn = (tipke['shift'] ? TRK : 1);
+  cilj = naprijed ? BRZINA*mn : (natrag ? -BRZINA*mn*0.8 : 0);
+  if (naprijed || natrag) putuje = null;
+
+  var l = tipke['a'] || tipke['arrowleft'], d = tipke['d'] || tipke['arrowright'];
+  if (l) yaw = Math.max(-1, yaw - 0.022);
+  if (d) yaw = Math.min(1, yaw + 0.022);
+}
+addEventListener('keydown', function(e){
+  var k = e.key.toLowerCase();
+  if (['w','s','a','d','arrowup','arrowdown','arrowleft','arrowright',' '].indexOf(k) >= 0) e.preventDefault();
+  tipke[k] = true; if (e.shiftKey) tipke['shift'] = true;
+  osvjeziCilj();
+});
+addEventListener('keyup', function(e){
+  tipke[e.key.toLowerCase()] = false; if (!e.shiftKey) tipke['shift'] = false;
+  osvjeziCilj();
+});
+addEventListener('blur', function(){ tipke = {}; cilj = 0; });
+/* strelice lijevo/desno drže se pritisnute — osvježavamo i u petlji */
+setInterval(function(){ if (tipke['a']||tipke['d']||tipke['arrowleft']||tipke['arrowright']) osvjeziCilj(); }, 16);
+
+/* ── miš: povuci za pogled, kotačić za hod ──────────────────────── */
+var vuce = false, mx = 0, my = 0;
+document.getElementById('scena').addEventListener('pointerdown', function(e){
+  if (e.pointerType === 'touch') return;
+  vuce = true; mx = e.clientX; my = e.clientY;
+  cv.setPointerCapture && cv.setPointerCapture(e.pointerId);
+});
+addEventListener('pointermove', function(e){
+  if (!vuce) return;
+  yaw   = Math.max(-1, Math.min(1, yaw   - (e.clientX - mx) / (window.innerWidth  * 0.65)));
+  pitch = Math.max(-1, Math.min(1, pitch - (e.clientY - my) / (window.innerHeight * 0.75)));
+  mx = e.clientX; my = e.clientY;
+});
+addEventListener('pointerup', function(){ vuce = false; });
+addEventListener('wheel', function(e){
+  putuje = null;
+  t = Math.max(0, Math.min(1, t + Math.sign(e.deltaY) * 0.008));
+}, { passive:true });
+
+/* ── prst: gaz lijevo, pogled bilo gdje desno ───────────────────── */
+if (matchMedia('(pointer:coarse)').matches) document.body.classList.add('dodir');
+
+var gazId = null, gazX0 = 0, gazY0 = 0;
+gaz.addEventListener('pointerdown', function(e){
+  gazId = e.pointerId; gazX0 = e.clientX; gazY0 = e.clientY;
+  gaz.setPointerCapture(e.pointerId); putuje = null; e.preventDefault();
+});
+gaz.addEventListener('pointermove', function(e){
+  if (e.pointerId !== gazId) return;
+  var dx = Math.max(-34, Math.min(34, e.clientX - gazX0));
+  var dy = Math.max(-34, Math.min(34, e.clientY - gazY0));
+  palac.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
+  cilj = -(dy / 34) * BRZINA * 1.35;
+  yaw  = Math.max(-1, Math.min(1, yaw + (dx / 34) * 0.016));
+});
+function gazStop(e){
+  if (e.pointerId !== gazId) return;
+  gazId = null; cilj = 0; palac.style.transform = 'translate(0,0)';
+}
+gaz.addEventListener('pointerup', gazStop);
+gaz.addEventListener('pointercancel', gazStop);
+
+var pogId = null, pgx = 0, pgy = 0;
+document.getElementById('scena').addEventListener('pointerdown', function(e){
+  if (e.pointerType !== 'touch' || pogId !== null) return;
+  pogId = e.pointerId; pgx = e.clientX; pgy = e.clientY;
+});
+addEventListener('pointermove', function(e){
+  if (e.pointerId !== pogId) return;
+  yaw   = Math.max(-1, Math.min(1, yaw   - (e.clientX - pgx) / (window.innerWidth  * 0.5)));
+  pitch = Math.max(-1, Math.min(1, pitch - (e.clientY - pgy) / (window.innerHeight * 0.6)));
+  pgx = e.clientX; pgy = e.clientY;
+});
+function pogStop(e){ if (e.pointerId === pogId) pogId = null; }
+addEventListener('pointerup', pogStop);
+addEventListener('pointercancel', pogStop);
+
+/* ── sobe na traci ──────────────────────────────────────────────── */
+SOBE.forEach(function(s, i){
+  var b = document.createElement('button');
+  b.type = 'button'; b.className = 'soba'; b.style.left = (s.t*100) + '%';
+  b.setAttribute('aria-label', 'Idi: ' + s.nm);
+  b.innerHTML = '<span>' + s.nm + '</span>';
+  b.addEventListener('click', function(){ putuje = { cilj: s.t }; cilj = 0; });
+  traka.appendChild(b);
+});
+traka.addEventListener('pointerdown', function(e){
+  if (e.target !== traka && e.target.className !== 'prijedjeno') return;
+  var r = traka.getBoundingClientRect();
+  putuje = { cilj: Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)) };
+  cilj = 0;
+});
+
+/* ── učitavanje: prvo brza serija, pa oštra oko tebe ────────────── */
+function dohvati(url, spremi, zastava, i, gotovo){
+  var im = new Image(); im.decoding = 'async';
+  im.onload  = function(){ spremi[i] = im; zastava[i] = true; if (gotovo) gotovo(); };
+  im.onerror = function(){ if (gotovo) gotovo(); };
+  im.src = url;
+}
+
+var loGotovo = 0;
+function pocni(){
+  dohvati(sLo(0), lo, loOk, 0, function(){
+    fit();
+    var n = 1;
+    function dalje(){
+      if (n >= LO){ krenimo.disabled = false; krenimo.textContent = 'Uđi'; ostroSerija(); return; }
+      var i = n++;
+      dohvati(sLo(i), lo, loOk, i, function(){
+        loGotovo++; ubar.style.width = (loGotovo/LO*100) + '%'; dalje();
+      });
+    }
+    for (var c = 0; c < 5; c++) dalje();
+  });
+}
+
+/* Oštri okviri se ne vuku redom nego od onoga gdje gost stoji prema
+   van, s prednošću u smjeru u kojem hoda. Tako je ono pred tobom
+   oštro prvo, a ne pola snimke koju možda nikad ne vidiš.         */
+function ostroSerija(){
+  var zivih = 0, uzeto = 0;
+  function sljedeci(){
+    var ovdje = Math.round(t * (HI-1));
+    var smjer = v >= 0 ? 1 : -1;
+    for (var d = 0; d < HI; d++){
+      var a = ovdje + d*smjer, b = ovdje - d*smjer;
+      if (a >= 0 && a < HI && !hiOk[a] && !hi[a]) return a;
+      if (b >= 0 && b < HI && !hiOk[b] && !hi[b]) return b;
+    }
+    return -1;
+  }
+  function pumpaj(){
+    while (zivih < 4){
+      var i = sljedeci();
+      if (i < 0) return;
+      hi[i] = true;                     /* zauzmi mjesto odmah */
+      zivih++;
+      (function(idx){
+        dohvati(sHi(idx), hi, hiOk, idx, function(){ zivih--; uzeto++; pumpaj(); });
+      })(i);
+    }
+  }
+  pumpaj();
+}
+
+krenimo.addEventListener('click', function(){
+  uvod.classList.add('gone');
+  setTimeout(function(){ uvod.style.display = 'none'; }, 650);
+  if (!radi){ radi = true; requestAnimationFrame(petlja); }
+});
+
+addEventListener('resize', function(){ clearTimeout(window.__r); window.__r = setTimeout(fit, 120); });
+addEventListener('orientationchange', function(){ setTimeout(fit, 250); });
+fit();
+pocni();
+</script>
+
+</body>
+</html>

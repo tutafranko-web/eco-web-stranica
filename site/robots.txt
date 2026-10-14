@@ -4,6 +4,7 @@
 User-agent: *
 Allow: /
 Disallow: /v1
+Disallow: /setnja
 
 # AI pomoćnici — izričito dopušteni, jer želimo da PIER
 # stoji točno kad ih netko pita za restoran u Splitu.
