@@ -55,6 +55,50 @@ na stranici bi značili da se hero otvara na crnom, a poziv na rezervaciju
 na kraju stoji na crnom. Ako ikad ponovno generiraš okvire, koristi
 montažu bez `fade` filtara.
 
+## Kadenca šetnje
+
+Preuzeta iz `scroll-world` skilla, arhitektura A — jedna neprekinuta
+vožnja naprijed bez obrata smjera na rezu. Naša snimka to već jest, pa
+je doktrina legla bez prepravke.
+
+Skrol se ne preslikava ravnomjerno na snimku. Svako poglavlje ima dvije
+ručke u `DIONICE`:
+
+| | |
+|---|---|
+| `tez` | koliki dio skrola pripada poglavlju — veći udio, duže zadržavanje |
+| `lin` | koliko se kamera smiri na sredini prizora, pa opet ubrza prema rezu |
+
+Smiraj je kubična mješavina iz motora skilla; rub ostaje netaknut
+(`f(0)=0`, `f(1)=1`), pa rezovi ostaju točno gdje jesu. Preslikavanje je
+provjereno brojevima: monotono, a obrat (`skrolni`) točan na šest
+decimala — bez toga bi skok na poglavlje promasio.
+
+Raspored slijedi gramatiku iz skilla za ugostiteljstvo: prilaz je
+prijevoz pa ide žvustro, prag i šank su trenuci zanata pa se na njima
+stoji, salon nosi poziv i drži najduže.
+
+### Zašto okviri, a ne video
+
+Skill scrubba `<video>` preko `currentTime`, s klipom u blobu. Izmjerio
+sam to na našoj građi i **za nas ispada skuplje**:
+
+| | 38 s na 1440×2560 |
+|---|---|
+| WebP okviri (400, q72) | **32 MB** |
+| H.264 crf 20, `-g 8` | 91 MB |
+| H.264 crf 23, `-g 12` | 50 MB |
+
+Scrub traži kratke GOP-ove, a kratki GOP ubija vremensku kompresiju —
+video postaje niz gotovo samostalnih okvira, samo ih je 1145 umjesto 400.
+Skill računa s pet-šest klipova po 8 sekundi koji se lijeno učitavaju;
+mi imamo jednu vožnju od 38 sekundi.
+
+Video bi se isplatio tek na 1080×1920 uz crf 24 (26 MB) ili 810×1440
+(22 MB) — ali to je korak **unatrag** u oštrini, uz dobitak od 30 sličica
+u sekundi umjesto 10,5. Ta zamjena je otvorena ako ikad bude važnija
+glatkoća od oštrine.
+
 ## Jezik
 
 Zadani jezik je **engleski** — i varijabla u skripti i sam markup, da
