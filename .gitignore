@@ -12,3 +12,5 @@ video/
 pregled.html
 
 .vercel
+# radni ONNX model za racunanje dubine - 99 MB, ne treba u repozitoriju
+*.onnx

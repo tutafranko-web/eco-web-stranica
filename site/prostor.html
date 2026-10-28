@@ -1,0 +1,690 @@
+<!doctype html>
+<html lang="hr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>PIER — 3D prostor</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#06080a">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;1,9..144,200&family=Archivo:wght@400;500;600&display=swap">
+<style>
+/* ══════════════════════════════════════════════════════════════════
+   PIER — 3D prostor.
+
+   Svaka ključna točka na putanji nosi kartu dubine izračunatu iz
+   same snimke. Preglednik od nje slaže pravu geometriju: svaki
+   piksel odbaci u prostor po svojoj dubini. Zato se pri pomaku
+   vidi paralaksa i zaklanjanje — bliže stvari putuju brže od
+   daljih, i zaklanjaju ih. To nije efekt nego posljedica toga
+   što scena stvarno ima treću dimenziju.
+   ══════════════════════════════════════════════════════════════════ */
+:root{
+  --ink:#06080a; --line:#242b31;
+  --lime:#ece7db; --lime-dim:#a7a093; --muted:#6c7982;
+  --brass:#c8912f; --brass-lit:#e2b14e;
+  --f-disp:"Fraunces",Georgia,"Times New Roman",serif;
+  --f-ui:"Archivo","Segoe UI",system-ui,sans-serif;
+  --pad:1.1rem; --sat:env(safe-area-inset-top,0px); --sab:env(safe-area-inset-bottom,0px);
+}
+@media (min-width:760px){ :root{ --pad:1.9rem } }
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; background:var(--ink); color:var(--lime);
+  font:400 15px/1.55 var(--f-ui);
+  overflow:hidden; overscroll-behavior:none;
+  -webkit-user-select:none; user-select:none; touch-action:none;
+}
+#gl{position:fixed; inset:0; width:100%; height:100%; display:block; background:#000}
+.vinjeta{
+  position:fixed; inset:0; pointer-events:none; z-index:2;
+  background:
+    radial-gradient(125% 75% at 50% 50%,transparent 46%,rgba(4,6,8,.70) 100%),
+    linear-gradient(180deg,rgba(6,8,10,.70) 0%,rgba(6,8,10,0) 18%),
+    linear-gradient(0deg,rgba(6,8,10,.78) 0%,rgba(6,8,10,0) 24%);
+}
+
+.hud{position:fixed; z-index:6; pointer-events:none}
+.hud.gore{
+  top:calc(var(--pad) + var(--sat)); left:var(--pad); right:var(--pad);
+  display:flex; align-items:flex-start; justify-content:space-between; gap:1rem;
+}
+.znak{font-family:var(--f-disp); font-weight:300; font-size:15px; letter-spacing:.42em; text-indent:.42em}
+.znak small{
+  display:block; margin-top:.45rem; font:500 8.5px var(--f-ui);
+  letter-spacing:.3em; text-transform:uppercase; color:var(--brass); text-indent:.3em;
+}
+.gdje{text-align:right}
+.gdje .rn{font:500 8.5px var(--f-ui); letter-spacing:.3em; color:var(--brass); text-indent:.3em}
+.gdje .nm{
+  font-family:var(--f-disp); font-weight:200; font-style:italic;
+  font-size:clamp(1.15rem,5.4vw,1.6rem); line-height:1.2; margin-top:.2rem; transition:opacity .35s;
+}
+a.izlaz{
+  position:fixed; z-index:7; top:calc(var(--pad) + var(--sat)); left:50%; transform:translateX(-50%);
+  font:600 8.5px var(--f-ui); letter-spacing:.26em; text-transform:uppercase;
+  color:var(--muted); text-decoration:none; padding:.6rem .9rem; pointer-events:auto;
+}
+a.izlaz:hover{color:var(--lime)}
+
+.put{
+  position:fixed; z-index:6; left:var(--pad); right:var(--pad);
+  bottom:calc(var(--pad) + var(--sab) + 4.4rem);
+  height:30px; display:flex; align-items:center; pointer-events:auto;
+}
+@media (min-width:760px){ .put{bottom:calc(var(--pad) + var(--sab) + 1.1rem)} }
+body.dodir .put{bottom:calc(var(--pad) + var(--sab) + 8.8rem)}
+.put .traka{position:relative; flex:1; height:1px; background:#2b333a}
+.put .prijedjeno{position:absolute; left:0; top:0; height:100%; background:var(--brass); width:0}
+.put .ja{
+  position:absolute; top:50%; width:9px; height:9px; margin:-4.5px 0 0 -4.5px;
+  background:var(--brass-lit); border-radius:50%; box-shadow:0 0 0 4px rgba(200,145,47,.18);
+}
+.put .soba{position:absolute; top:50%; width:30px; height:30px; margin:-15px 0 0 -15px; background:none; border:0; padding:0; cursor:pointer}
+.put .soba::before{
+  content:""; position:absolute; left:50%; top:50%; width:5px; height:5px; margin:-2.5px 0 0 -2.5px;
+  border:1px solid var(--muted); transform:rotate(45deg); transition:border-color .2s, background .2s;
+}
+.put .soba:hover::before,.put .soba[aria-current="true"]::before{border-color:var(--brass-lit); background:var(--brass-lit)}
+.put .soba span{
+  position:absolute; bottom:22px; left:50%; transform:translateX(-50%);
+  font:500 8px var(--f-ui); letter-spacing:.2em; text-transform:uppercase;
+  color:var(--muted); white-space:nowrap; opacity:0; transition:opacity .2s;
+}
+.put .soba:hover span,.put .soba[aria-current="true"] span{opacity:1}
+
+.upute{
+  position:fixed; z-index:6; left:var(--pad); bottom:calc(var(--pad) + var(--sab));
+  font:500 8.5px/2 var(--f-ui); letter-spacing:.2em; text-transform:uppercase;
+  color:var(--muted); pointer-events:none;
+}
+.upute b{color:var(--lime-dim); font-weight:600}
+.upute kbd{
+  display:inline-block; min-width:17px; padding:1px 4px; margin:0 1px;
+  border:1px solid #333c44; color:var(--lime-dim); font:600 8.5px var(--f-ui);
+  text-align:center; border-radius:2px;
+}
+.gaz{
+  position:fixed; z-index:6; left:var(--pad); bottom:calc(var(--pad) + var(--sab) + .4rem);
+  width:112px; height:112px; border-radius:50%; border:1px solid var(--line);
+  background:rgba(10,14,18,.4); backdrop-filter:blur(4px);
+  display:none; place-items:center; touch-action:none;
+}
+.gaz i{position:absolute; width:42px; height:42px; border-radius:50%; background:rgba(200,145,47,.85); transition:transform .08s linear}
+.gaz u{position:absolute; left:50%; transform:translateX(-50%); font-style:normal; color:var(--muted); font:600 9px var(--f-ui); letter-spacing:.2em}
+.gaz u.g{top:7px} .gaz u.d{bottom:7px}
+body.dodir .gaz{display:grid}
+body.dodir .upute{display:none}
+
+/* ── ugađanje: za probu, skriveno dok se ne pozove ─────────────── */
+.stol{
+  position:fixed; z-index:8; right:var(--pad); bottom:calc(var(--pad) + var(--sab) + 4.4rem);
+  width:216px; padding:.95rem 1.05rem; background:rgba(10,14,18,.93);
+  border:1px solid var(--line); display:none;
+}
+.stol.on{display:block}
+.stol h4{margin:0 0 .7rem; font:600 8.5px var(--f-ui); letter-spacing:.26em; text-transform:uppercase; color:var(--brass)}
+.stol label{display:block; margin-bottom:.6rem; font:500 9px var(--f-ui); letter-spacing:.14em; text-transform:uppercase; color:var(--muted)}
+.stol label b{float:right; color:var(--lime-dim); font-variant-numeric:tabular-nums}
+.stol input{width:100%; margin-top:.3rem; accent-color:var(--brass)}
+.stol p{margin:.7rem 0 0; font:400 10px/1.5 var(--f-ui); color:var(--muted)}
+
+#uvod{
+  position:fixed; inset:0; z-index:20; display:grid; place-items:center;
+  background:var(--ink); transition:opacity .6s ease; padding:2rem; text-align:center;
+}
+#uvod.gone{opacity:0; pointer-events:none}
+#uvod .mid{max-width:27rem}
+#uvod h1{font-family:var(--f-disp); font-weight:200; font-size:clamp(1.7rem,7vw,2.4rem); margin:0 0 .9rem; line-height:1.15}
+#uvod h1 em{font-style:italic; color:var(--brass-lit)}
+#uvod p{color:var(--lime-dim); font-size:13.5px; margin:0 0 1.5rem}
+#uvod .bar{width:120px; height:1px; background:#242b31; margin:0 auto 1.3rem; overflow:hidden}
+#uvod .bar i{display:block; height:100%; width:3%; background:var(--brass); transition:width .3s}
+#uvod .proba{font:500 8.5px var(--f-ui); letter-spacing:.26em; text-transform:uppercase; color:var(--muted)}
+.krenimo{
+  appearance:none; cursor:pointer; margin-top:.4rem; background:var(--brass); border:0; color:#120d05;
+  font:600 10px var(--f-ui); letter-spacing:.3em; text-transform:uppercase; padding:1rem 1.8rem; min-height:48px;
+}
+.krenimo:hover{background:var(--brass-lit)}
+.krenimo[disabled]{background:#2a3138; color:var(--muted); cursor:default}
+.greska{color:#c2564a; font-size:12.5px; margin-top:1rem}
+</style>
+</head>
+<body>
+
+<canvas id="gl"></canvas>
+<div class="vinjeta"></div>
+
+<a class="izlaz" href="/">← natrag</a>
+
+<div class="hud gore">
+  <div class="znak">PIER<small>3D prostor</small></div>
+  <div class="gdje"><div class="rn" id="rn">I</div><div class="nm" id="nm">Prilaz</div></div>
+</div>
+
+<div class="put">
+  <div class="traka" id="traka"><i class="prijedjeno" id="prijedjeno"></i><i class="ja" id="ja"></i></div>
+</div>
+
+<div class="upute">
+  <b>hod</b> <kbd>W</kbd><kbd>S</kbd> &nbsp;·&nbsp; <b>korak u stranu</b> <kbd>A</kbd><kbd>D</kbd> &nbsp;·&nbsp;
+  <b>pogled</b> povuci mišem &nbsp;·&nbsp; <b>ugađanje</b> <kbd>G</kbd>
+</div>
+
+<div class="gaz" id="gaz"><u class="g">naprijed</u><i id="palac"></i><u class="d">natrag</u></div>
+
+<div class="stol" id="stol">
+  <h4>Ugađanje</h4>
+  <label>Razmak koraka <b id="vKorak">0.38</b><input type="range" id="sKorak" min="0.12" max="1.10" step="0.01" value="0.38"></label>
+  <label>Najbliže <b id="vBlizu">0.55</b><input type="range" id="sBlizu" min="0.25" max="1.60" step="0.05" value="0.55"></label>
+  <label>Najdalje <b id="vDalek">16</b><input type="range" id="sDalek" min="5" max="40" step="1" value="16"></label>
+  <label>Vidni kut <b id="vKut">62</b><input type="range" id="sKut" min="40" max="90" step="1" value="62"></label>
+  <label>Rez rubova <b id="vRub">0.075</b><input type="range" id="sRub" min="0.010" max="0.220" step="0.004" value="0.075"></label>
+  <p>Ako prostor djeluje preplitko ili predubok, razmak koraka i najdalje su dvije ručke koje to mijenjaju.</p>
+</div>
+
+<div id="uvod">
+  <div class="mid">
+    <h1>Uđi u <em>prostor</em></h1>
+    <p>
+      Ovo je prava geometrija izračunata iz snimke — pomakni se i
+      bliže stvari putuju brže od daljih, i zaklanjaju ih. Hodaj
+      naprijed, koračaj u stranu, gledaj okolo.
+    </p>
+    <div class="bar"><i id="ubar"></i></div>
+    <button type="button" class="krenimo" id="krenimo" disabled>Računam prostor…</button>
+    <p style="margin:1.5rem 0 0"><span class="proba">proba · nije dio stranice</span></p>
+    <div class="greska" id="greska" hidden></div>
+  </div>
+</div>
+
+<script>
+/* ══ 3D prostor ════════════════════════════════════════════════════
+   Svaka ključna točka je mreža koju vršni shader razgiba po karti
+   dubine: piksel se odbaci duž svoje zrake na udaljenost koju je
+   model procijenio. Dvije susjedne točke stoje jedna iza druge na
+   putanji, pa hod naprijed stvarno prolazi kroz geometriju.
+   ══════════════════════════════════════════════════════════════════ */
+var SOBE = [
+  { rn:"I",   nm:"Prilaz", p:0.000 }, { rn:"II",  nm:"Prag",  p:0.314 },
+  { rn:"III", nm:"Šank",   p:0.516 }, { rn:"IV",  nm:"Vina",  p:0.652 },
+  { rn:"V",   nm:"Salon",  p:0.731 }, { rn:"VI",  nm:"Stol",  p:0.880 }
+];
+
+var cv = document.getElementById('gl');
+var gl = cv.getContext('webgl2', { alpha:false, antialias:true, powerPreference:'high-performance' });
+var uvod = document.getElementById('uvod'), ubar = document.getElementById('ubar');
+var krenimo = document.getElementById('krenimo'), greska = document.getElementById('greska');
+var elRn = document.getElementById('rn'), elNm = document.getElementById('nm');
+var traka = document.getElementById('traka');
+var prijedjeno = document.getElementById('prijedjeno'), jaTocka = document.getElementById('ja');
+var gaz = document.getElementById('gaz'), palac = document.getElementById('palac');
+var stol = document.getElementById('stol');
+
+if (!gl){
+  greska.hidden = false;
+  greska.textContent = 'Ovaj preglednik nema WebGL2, bez kojega se prostor ne može prikazati.';
+  krenimo.textContent = 'Ne mogu dalje';
+}
+
+/* ── ručke za ugađanje ──────────────────────────────────────────── */
+var P = { korak:0.38, blizu:0.55, dalek:16.0, kut:62.0, rub:0.075 };
+[['sKorak','vKorak','korak',2],['sBlizu','vBlizu','blizu',2],
+ ['sDalek','vDalek','dalek',0],['sKut','vKut','kut',0],['sRub','vRub','rub',3]
+].forEach(function(r){
+  var s = document.getElementById(r[0]), v = document.getElementById(r[1]);
+  s.addEventListener('input', function(){ P[r[2]] = +s.value; v.textContent = (+s.value).toFixed(r[3]); });
+});
+addEventListener('keydown', function(e){ if (e.key === 'g' || e.key === 'G') stol.classList.toggle('on'); });
+
+/* ── shaderi ────────────────────────────────────────────────────── */
+var VS = `#version 300 es
+precision highp float;
+in vec2 mreza;                 /* 0..1 po plohi */
+uniform sampler2D dub;
+uniform vec2  dubVel;          /* dimenzije karte dubine */
+uniform float tanY, aspekt;    /* vidni kut */
+uniform float blizu, dalek;    /* raspon dubine */
+uniform float pomakZ;          /* gdje ova točka stoji na putanji */
+uniform float guraj;           /* podlogu gurnemo korak dalje     */
+uniform mat4  pogled;          /* kamera */
+out vec2 vUv;
+out float vRub;                /* koliko je ovdje mreža rastegnuta */
+out float vRubPlohe;           /* blizina ruba kadra */
+
+float disparitet(vec2 uv){
+  vec2 rg = texture(dub, uv).rg;
+  return (rg.r * 255.0 * 256.0 + rg.g * 255.0) / 65535.0;
+}
+vec3 uProstor(vec2 uv, float d){
+  float Z = 1.0 / mix(1.0/dalek, 1.0/blizu, d);
+  vec2 ndc = uv * 2.0 - 1.0;
+  return vec3(ndc.x * tanY * aspekt, ndc.y * tanY, -1.0) * Z;
+}
+void main(){
+  vUv = mreza;
+  float d = disparitet(mreza);
+  vec2 t = 1.0 / dubVel;
+
+  /* rastegnuti trokuti preko skoka u dubini izgledaju kao guma -
+     mjerimo nagib i takve odbacujemo u fragmentu */
+  float dl = disparitet(mreza - vec2(t.x, 0.0));
+  float dr = disparitet(mreza + vec2(t.x, 0.0));
+  float dg = disparitet(mreza + vec2(0.0, t.y));
+  float dd = disparitet(mreza - vec2(0.0, t.y));
+  vRub = max(max(abs(d-dl), abs(d-dr)), max(abs(d-dg), abs(d-dd)));
+
+  vec2 r = min(mreza, 1.0 - mreza);
+  vRubPlohe = smoothstep(0.0, 0.022, min(r.x, r.y));
+
+  vec3 pos = uProstor(mreza, d) * guraj;
+  pos.z += pomakZ;
+  gl_Position = pogled * vec4(pos, 1.0);
+}`;
+
+var FS = `#version 300 es
+precision highp float;
+in vec2 vUv; in float vRub; in float vRubPlohe;
+uniform sampler2D boja;
+uniform float prag, prozirnost, rezi, tamni;
+out vec4 izlaz;
+void main(){
+  /* Dva prolaza. Podloga (rezi = 0) crta se cijela, razvučena i
+     potamnjena, korak dalje od oka. Prednji sloj (rezi = 1) reže
+     razvučene trokute. Rupe tako ne pokazuju crninu nego razmazanu
+     pozadinu, što oko prihvaća, a crna jama ne.                  */
+  float cijela = 1.0;
+  if (rezi > 0.5){
+    cijela = 1.0 - smoothstep(prag * 0.72, prag, vRub);
+    if (cijela <= 0.0) discard;
+  }
+  vec3 c = texture(boja, vUv).rgb * tamni;
+  float a = prozirnost * vRubPlohe * cijela;
+  if (a <= 0.004) discard;
+  izlaz = vec4(c, a);
+}`;
+
+function shader(vrsta, izvor){
+  var s = gl.createShader(vrsta);
+  gl.shaderSource(s, izvor); gl.compileShader(s);
+  if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s));
+  return s;
+}
+var prog, A = {}, U = {};
+if (gl){
+  prog = gl.createProgram();
+  gl.attachShader(prog, shader(gl.VERTEX_SHADER, VS));
+  gl.attachShader(prog, shader(gl.FRAGMENT_SHADER, FS));
+  gl.linkProgram(prog);
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(prog));
+  gl.useProgram(prog);
+  A.mreza = gl.getAttribLocation(prog, 'mreza');
+  ['dub','boja','dubVel','tanY','aspekt','blizu','dalek','pomakZ','pogled','prag',
+    'prozirnost','rezi','tamni','guraj']
+    .forEach(function(n){ U[n] = gl.getUniformLocation(prog, n); });
+}
+
+/* ── mreža ──────────────────────────────────────────────────────── */
+var MX = 132, MY = 234;
+var vao, brojIndeksa = 0;
+function slozimMrezu(){
+  var tocke = new Float32Array(MX * MY * 2), k = 0;
+  for (var y = 0; y < MY; y++)
+    for (var x = 0; x < MX; x++){ tocke[k++] = x/(MX-1); tocke[k++] = y/(MY-1); }
+
+  var ind = new Uint32Array((MX-1) * (MY-1) * 6), j = 0;
+  for (var yy = 0; yy < MY-1; yy++)
+    for (var xx = 0; xx < MX-1; xx++){
+      var a = yy*MX + xx, b = a+1, c = a+MX, d = c+1;
+      ind[j++]=a; ind[j++]=c; ind[j++]=b; ind[j++]=b; ind[j++]=c; ind[j++]=d;
+    }
+  brojIndeksa = j;
+
+  vao = gl.createVertexArray(); gl.bindVertexArray(vao);
+  var vb = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, vb); gl.bufferData(gl.ARRAY_BUFFER, tocke, gl.STATIC_DRAW);
+  gl.enableVertexAttribArray(A.mreza); gl.vertexAttribPointer(A.mreza, 2, gl.FLOAT, false, 0, 0);
+  var ib = gl.createBuffer();
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ib); gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, ind, gl.STATIC_DRAW);
+  gl.bindVertexArray(null);
+}
+
+/* ── podaci ─────────────────────────────────────────────────────── */
+var M = null, N = 0;
+var tex = [], dubT = [], stanje = [];     /* 0 nema, 1 vuče se, 2 spremno */
+
+function napraviTeksturu(img, jeDubina){
+  var t = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, t);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  /* dubina se ne smije glatko miješati — zamutila bi skokove */
+  var filt = jeDubina ? gl.NEAREST : gl.LINEAR;
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, filt);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, filt);
+  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB8, gl.RGB, gl.UNSIGNED_BYTE, img);
+  return t;
+}
+function broj(n){ return String(n).padStart(3, '0'); }
+
+function ucitaj(i, gotovo){
+  if (i < 0 || i >= N || stanje[i]) { if (gotovo) gotovo(); return; }
+  stanje[i] = 1;
+  var a = new Image(), b = new Image(), ostalo = 2;
+  function kraj(){
+    if (--ostalo) return;
+    try {
+      tex[i]  = napraviTeksturu(a, false);
+      dubT[i] = napraviTeksturu(b, true);
+      stanje[i] = 2;
+    } catch(e){ stanje[i] = 0; }
+    if (gotovo) gotovo();
+  }
+  a.onload = kraj; a.onerror = kraj; b.onload = kraj; b.onerror = kraj;
+  a.src = 'prostor/t' + broj(i) + '.webp';
+  b.src = 'prostor/d' + broj(i) + '.png';
+}
+function pustiDaleke(sredina){
+  for (var i = 0; i < N; i++){
+    if (stanje[i] === 2 && Math.abs(i - sredina) > 4){
+      gl.deleteTexture(tex[i]); gl.deleteTexture(dubT[i]);
+      tex[i] = dubT[i] = null; stanje[i] = 0;
+    }
+  }
+}
+
+/* ── kamera ─────────────────────────────────────────────────────── */
+var s = 0;                       /* položaj na putanji, u točkama */
+var v = 0, cilj = 0;
+var yaw = 0, pitch = 0, yawC = 0, pitchC = 0;
+var ox = 0, oy = 0, oxC = 0, oyC = 0;   /* korak u stranu i visina */
+var BRZINA = 0.021, ZALET = 0.09, KOCNICA = 0.15;
+var USTRANU = 0.15, VISINA = 0.11;       /* koliko se smije nagnuti */
+var YAW = 0.30, PITCH = 0.20;            /* koliko se smije gledati */
+var putuje = null, soba = -1;
+
+function mnozi(a, b){
+  var r = new Float32Array(16);
+  for (var i=0;i<4;i++) for (var j=0;j<4;j++){
+    var z=0; for (var k=0;k<4;k++) z += a[k*4+j]*b[i*4+k];
+    r[i*4+j]=z;
+  }
+  return r;
+}
+function projekcija(kutY, asp, bl, dl){
+  var f = 1/Math.tan(kutY*Math.PI/360), nf = 1/(bl-dl);
+  return new Float32Array([f/asp,0,0,0, 0,f,0,0, 0,0,(dl+bl)*nf,-1, 0,0,2*dl*bl*nf,0]);
+}
+function kamera(px, py, pz, y, p){
+  var cy=Math.cos(-y), sy=Math.sin(-y), cp=Math.cos(-p), sp=Math.sin(-p);
+  /* rotacija: prvo visina pa zakret, pa pomak */
+  var R = new Float32Array([
+    cy,  sy*sp,  -sy*cp, 0,
+    0,   cp,      sp,    0,
+    sy, -cy*sp,   cy*cp, 0,
+    0,0,0,1
+  ]);
+  var T = new Float32Array([1,0,0,0, 0,1,0,0, 0,0,1,0, -px,-py,-pz,1]);
+  return mnozi(R, T);
+}
+
+/* ── crtanje ────────────────────────────────────────────────────── */
+function velicina(){
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  var w = Math.round(innerWidth*dpr), h = Math.round(innerHeight*dpr);
+  if (cv.width !== w || cv.height !== h){ cv.width = w; cv.height = h; }
+  gl.viewport(0, 0, cv.width, cv.height);
+}
+function crtaj(){
+  velicina();
+  gl.clearColor(0,0,0,1);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  if (!M) return;
+
+  var i = Math.max(0, Math.min(N-1, Math.floor(s)));
+  var f = s - i;
+  var asp = cv.width / cv.height;
+  var aspSlike = M.tex[0] / M.tex[1];
+  /* Na ekranu sirem od snimke kadar ne bi dosegao do rubova, pa
+     suzimo vidni kut dok ne pokrije - radije odrezati vrh i dno
+     nego ostaviti crne trake sa strane. */
+  var tanY = Math.tan(P.kut * Math.PI / 360);
+  var tanPrikaz = Math.min(tanY, tanY * aspSlike / asp);
+  var kutPrikaz = Math.atan(tanPrikaz) * 360 / Math.PI;
+  var proj = projekcija(kutPrikaz, asp, 0.05, 200);
+
+  /* kamera stoji između dvije točke; one su razmaknute za korak */
+  var pz = -f * P.korak;
+  var V = kamera(oxC, oyC, pz, yawC, pitchC);
+  var VP = mnozi(proj, V);
+
+  gl.useProgram(prog);
+  gl.bindVertexArray(vao);
+  gl.enable(gl.DEPTH_TEST);
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+  gl.uniformMatrix4fv(U.pogled, false, VP);
+  gl.uniform1f(U.tanY, Math.tan(P.kut*Math.PI/360));
+  gl.uniform1f(U.aspekt, M.tex[0]/M.tex[1]);
+  gl.uniform1f(U.blizu, P.blizu);
+  gl.uniform1f(U.dalek, P.dalek);
+  gl.uniform1f(U.prag, P.rub);
+  gl.uniform2f(U.dubVel, M.dub[0], M.dub[1]);
+  gl.uniform1i(U.boja, 0); gl.uniform1i(U.dub, 1);
+
+  /* dalju točku crtamo prvu, bližu preko nje */
+  var red = [];
+  var jeRez = M.tocke[Math.min(N-1, i+1)] && M.tocke[Math.min(N-1, i+1)].rez;
+  if (i+1 < N && !jeRez) red.push([i+1, -P.korak, f]);
+  red.push([i, 0, jeRez ? 1 : (1 - f*0.55)]);
+
+  red.forEach(function(r){
+    var k = r[0];
+    if (stanje[k] !== 2) return;
+    var alfa = Math.max(0, Math.min(1, r[2]));
+    gl.uniform1f(U.pomakZ, r[1]);
+    gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, tex[k]);
+    gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, dubT[k]);
+
+    /* podloga */
+    gl.uniform1f(U.rezi, 0); gl.uniform1f(U.tamni, 0.74);
+    gl.uniform1f(U.guraj, 1.035); gl.uniform1f(U.prozirnost, alfa);
+    gl.drawElements(gl.TRIANGLES, brojIndeksa, gl.UNSIGNED_INT, 0);
+
+    /* prednji sloj */
+    gl.uniform1f(U.rezi, 1); gl.uniform1f(U.tamni, 1.0);
+    gl.uniform1f(U.guraj, 1.0); gl.uniform1f(U.prozirnost, alfa);
+    gl.drawElements(gl.TRIANGLES, brojIndeksa, gl.UNSIGNED_INT, 0);
+  });
+  gl.bindVertexArray(null);
+}
+
+/* ── gdje si ────────────────────────────────────────────────────── */
+function osvjeziHud(){
+  var p = N > 1 ? s/(N-1) : 0;
+  var k = 0;
+  for (var i = 0; i < SOBE.length; i++) if (p >= SOBE[i].p - 0.012) k = i;
+  if (k !== soba){
+    soba = k;
+    elNm.style.opacity = 0;
+    setTimeout(function(){
+      elRn.textContent = SOBE[soba].rn; elNm.textContent = SOBE[soba].nm; elNm.style.opacity = 1;
+    }, 160);
+    traka.querySelectorAll('.soba').forEach(function(b, bi){
+      b.setAttribute('aria-current', bi === soba ? 'true' : 'false');
+    });
+  }
+  prijedjeno.style.width = (p*100).toFixed(1) + '%';
+  jaTocka.style.left = (p*100).toFixed(1) + '%';
+}
+
+/* ── petlja ─────────────────────────────────────────────────────── */
+var zadnjiKadar = 0, zadnjaSredina = -99;
+function petlja(ts){
+  var dt = zadnjiKadar ? Math.min(3, (ts - zadnjiKadar)/16.667) : 1;
+  zadnjiKadar = ts;
+
+  if (putuje){
+    var d = putuje - s;
+    if (Math.abs(d) < 0.02){ s = putuje; putuje = null; v = 0; }
+    else s += d * 0.05 * dt;
+  } else {
+    var raz = cilj - v;
+    v += raz * (Math.abs(cilj) > Math.abs(v) ? ZALET : KOCNICA) * dt;
+    if (Math.abs(v) < 0.00006) v = 0;
+    s += v * dt;
+  }
+  if (s < 0){ s = 0; v = 0; }
+  if (s > N-1){ s = N-1; v = 0; }
+
+  yawC   += (yaw - yawC) * 0.14 * dt;
+  pitchC += (pitch - pitchC) * 0.14 * dt;
+  oxC    += (ox - oxC) * 0.12 * dt;
+  oyC    += (oy - oyC) * 0.12 * dt;
+
+  var sredina = Math.round(s);
+  if (sredina !== zadnjaSredina){
+    zadnjaSredina = sredina;
+    [0,1,-1,2,-2,3].forEach(function(o){ ucitaj(sredina+o); });
+    pustiDaleke(sredina);
+  }
+
+  crtaj(); osvjeziHud();
+  requestAnimationFrame(petlja);
+}
+
+/* ── upravljanje ────────────────────────────────────────────────── */
+var tipke = {};
+function osvjezi(){
+  var n = tipke['w']||tipke['arrowup'], z = tipke['s']||tipke['arrowdown'];
+  var mn = tipke['shift'] ? 2.0 : 1;
+  cilj = n ? BRZINA*mn : (z ? -BRZINA*mn*0.8 : 0);
+  if (n||z) putuje = null;
+  /* korak u stranu je naginjanje, ne hodanje - izvan snimljenog
+     vidnog polja nema podataka i vidi se praznina */
+  ox = (tipke['a'] ? -USTRANU : 0) + (tipke['d'] ? USTRANU : 0);
+  oy = (tipke['q'] ? -VISINA : 0) + (tipke['e'] ? VISINA : 0);
+}
+addEventListener('keydown', function(e){
+  var k = e.key.toLowerCase();
+  if (['w','s','a','d','q','e','arrowup','arrowdown','arrowleft','arrowright',' '].indexOf(k)>=0) e.preventDefault();
+  tipke[k] = true; if (e.shiftKey) tipke['shift'] = true; osvjezi();
+});
+addEventListener('keyup', function(e){
+  tipke[e.key.toLowerCase()] = false; if (!e.shiftKey) tipke['shift'] = false; osvjezi();
+});
+addEventListener('blur', function(){ tipke = {}; cilj = 0; ox = oy = 0; });
+
+var vuce = false, mx = 0, my = 0;
+cv.addEventListener('pointerdown', function(e){
+  if (e.pointerType === 'touch') return;
+  vuce = true; mx = e.clientX; my = e.clientY;
+});
+addEventListener('pointermove', function(e){
+  if (!vuce) return;
+  yaw   = Math.max(-YAW,   Math.min(YAW,   yaw   - (e.clientX-mx)/(innerWidth*1.5)));
+  pitch = Math.max(-PITCH, Math.min(PITCH, pitch - (e.clientY-my)/(innerHeight*1.9)));
+  mx = e.clientX; my = e.clientY;
+});
+addEventListener('pointerup', function(){ vuce = false; });
+addEventListener('wheel', function(e){
+  putuje = null; s = Math.max(0, Math.min(N-1, s + Math.sign(e.deltaY)*0.22));
+}, { passive:true });
+
+if (matchMedia('(pointer:coarse)').matches) document.body.classList.add('dodir');
+var gazId = null, gx0 = 0, gy0 = 0;
+gaz.addEventListener('pointerdown', function(e){
+  gazId = e.pointerId; gx0 = e.clientX; gy0 = e.clientY;
+  gaz.setPointerCapture(e.pointerId); putuje = null; e.preventDefault();
+});
+gaz.addEventListener('pointermove', function(e){
+  if (e.pointerId !== gazId) return;
+  var dx = Math.max(-34, Math.min(34, e.clientX-gx0)), dy = Math.max(-34, Math.min(34, e.clientY-gy0));
+  palac.style.transform = 'translate('+dx+'px,'+dy+'px)';
+  cilj = -(dy/34)*BRZINA*1.3;
+  ox = (dx/34)*USTRANU;
+});
+function gazStop(e){ if (e.pointerId!==gazId) return; gazId=null; cilj=0; ox=0; palac.style.transform='translate(0,0)'; }
+gaz.addEventListener('pointerup', gazStop);
+gaz.addEventListener('pointercancel', gazStop);
+
+var pogId = null, px0 = 0, py0 = 0;
+cv.addEventListener('pointerdown', function(e){
+  if (e.pointerType !== 'touch' || pogId !== null) return;
+  pogId = e.pointerId; px0 = e.clientX; py0 = e.clientY;
+});
+addEventListener('pointermove', function(e){
+  if (e.pointerId !== pogId) return;
+  yaw   = Math.max(-YAW,   Math.min(YAW,   yaw   - (e.clientX-px0)/(innerWidth*1.2)));
+  pitch = Math.max(-PITCH, Math.min(PITCH, pitch - (e.clientY-py0)/(innerHeight*1.5)));
+  px0 = e.clientX; py0 = e.clientY;
+});
+addEventListener('pointerup', function(e){ if (e.pointerId===pogId) pogId=null; });
+addEventListener('pointercancel', function(e){ if (e.pointerId===pogId) pogId=null; });
+
+/* ── pokretanje ─────────────────────────────────────────────────── */
+function sobeNaTraku(){
+  SOBE.forEach(function(so){
+    var b = document.createElement('button');
+    b.type='button'; b.className='soba'; b.style.left=(so.p*100)+'%';
+    b.setAttribute('aria-label','Idi: '+so.nm);
+    b.innerHTML = '<span>'+so.nm+'</span>';
+    b.addEventListener('click', function(){ putuje = so.p*(N-1); cilj = 0; });
+    traka.appendChild(b);
+  });
+}
+
+if (gl){
+  slozimMrezu();
+  fetch('prostor/prostor.json').then(function(r){ return r.json(); }).then(function(m){
+    M = m; N = m.tocaka;
+    stanje = new Array(N).fill(0); tex = new Array(N); dubT = new Array(N);
+    if (m.vidniKutY){ P.kut = m.vidniKutY; document.getElementById('sKut').value = m.vidniKutY;
+                      document.getElementById('vKut').textContent = Math.round(m.vidniKutY); }
+    sobeNaTraku();
+
+    var treba = [0,1,2,3,4,5], gotovih = 0;
+    treba.forEach(function(i){
+      ucitaj(i, function(){
+        gotovih++; ubar.style.width = (gotovih/treba.length*100)+'%';
+        if (gotovih === treba.length){ krenimo.disabled = false; krenimo.textContent = 'Uđi'; }
+      });
+    });
+  }).catch(function(e){
+    greska.hidden = false;
+    greska.textContent = 'Podaci o prostoru se nisu učitali: ' + e.message;
+  });
+}
+
+function udji(){
+  uvod.classList.add('gone');
+  setTimeout(function(){ uvod.style.display='none'; }, 650);
+  requestAnimationFrame(petlja);
+}
+krenimo.addEventListener('click', udji);
+
+/* ?auto=1 preskace uvod, ?s=30 postavi mjesto, ?yaw= i ?ox= pogled
+   i korak u stranu - sluzi provjeri prikaza bez ruku */
+(function(){
+  var q = new URLSearchParams(location.search);
+  if (!q.has('auto')) return;
+  var cekaj = setInterval(function(){
+    if (krenimo.disabled) return;
+    clearInterval(cekaj);
+    if (q.has('s'))   { s = +q.get('s'); zadnjaSredina = -99; }
+    if (q.has('yaw')) { yaw = yawC = +q.get('yaw'); }
+    if (q.has('ox'))  { ox = oxC = +q.get('ox'); }
+    udji();
+  }, 120);
+})();
+addEventListener('resize', velicina);
+</script>
+
+</body>
+</html>
