@@ -1235,6 +1235,19 @@ var Walk = (function(){
   var NAJDALJE = 9;           /* najvise okvira koliko zamah ponese */
   var PRAG = 3.0;             /* ispod toga je obican skrol, ne zamah */
   var krenulo = false, zavrseno = false, pocetak = Date.now();
+  /* Dirnuo ju je cim je okrenuo kotacic, povukao prstom, pritisnuo
+     tipku za pomak ili je stranica vracena nize od vrha. */
+  var dirnuto = false;
+  function krenuo(){ return dirnuto || window.pageYOffset > 6 || progress() > 0.002; }
+  ['wheel','touchmove','keydown'].forEach(function(dog){
+    addEventListener(dog, function(e){
+      if (dog === 'keydown'){
+        var k = (e.key || '').toLowerCase();
+        if (['arrowdown','arrowup','pagedown','pageup',' ','end','home'].indexOf(k) < 0) return;
+      }
+      dirnuto = true;
+    }, { passive:true, capture:true });
+  });
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   var conn = navigator.connection || {};
   var thrifty = conn.saveData === true || /^(slow-)?2g$/.test(conn.effectiveType || '');
@@ -1302,15 +1315,44 @@ var Walk = (function(){
   }
   /* poziv se javi kratko nakon sto se slika pojavi; ako je gost
      vec krenuo skrolati, nema ga sto podsjecati */
+  /* Znak je podsjetnik onome tko stoji. Tko je vec krenuo ne treba
+     podsjetnik, pa se ne javlja uopce - a ako krene dok stoji na
+     ekranu, gasi se odmah, mekano, da ne nestane kao da je puknuo. */
   function pozovi(){
     if (reduce) return;
     var el = document.getElementById('pozivnik');
-    if (!el || progress() > 0.004) { if (el) el.remove(); return; }
-    setTimeout(function(){
-      if (progress() > 0.004){ el.remove(); return; }
+    if (!el) return;
+    var tajmer = null;
+
+    function makni(){
+      if (!el) return;
+      var e = el; el = null;
+      clearTimeout(tajmer);
+      removeEventListener('scroll', straza);
+      if (!e.classList.contains('on')){ e.remove(); return; }
+      /* zapamti gdje je animacija stala, pa odatle blago u nulu */
+      var sada = getComputedStyle(e).opacity;
+      e.style.animation = 'none';
+      e.style.opacity = sada;
+      void e.offsetWidth;
+      e.style.transition = 'opacity .22s ease';
+      e.style.opacity = '0';
+      setTimeout(function(){ e.remove(); }, 260);
+    }
+
+    var odakle = window.pageYOffset;
+    function straza(){
+      if (Math.abs(window.pageYOffset - odakle) > 4) makni();
+    }
+
+    if (krenuo()) { makni(); return; }
+    tajmer = setTimeout(function(){
+      if (krenuo()) { makni(); return; }
       el.classList.add('on');
       MJ.dog('scroll_hint_shown', {});
-      setTimeout(function(){ el.remove(); }, 3100);
+      odakle = window.pageYOffset;
+      addEventListener('scroll', straza, { passive:true });
+      tajmer = setTimeout(makni, 3100);
     }, 700);
   }
 
