@@ -597,40 +597,84 @@ footer{border-top:1px solid var(--line); background:var(--stone)}
   .still{display:block; max-width:44rem; margin:0 auto}
   .nav{position:static; background:none; border:0; padding-left:0; padding-right:0}
 }
-/* -- poziv na skrolanje: pojavi se, zadrzi i nestane sam --------- */
+/* -- poziv na skrolanje -------------------------------------------
+   Mjedena viska, ne kutica. Tamna ploca s obrubom je bila strano
+   tijelo nad snimkom; ovo je sastavljeno od onoga cime stranica vec
+   govori - vlas mjedi, romb i razmaknuta verzala. Nema podloge, samo
+   meka sjena pod tekstom, pa mark lebdi nad kadrom umjesto da ga
+   prekrije.
+
+   Sklapa se redom: natpis se digne, vlasi se razvuku od sredine van,
+   viska padne, pa niz nju dvaput klizne zrno. Ne prima dodir, pa
+   nikad ne stoji gostu na putu.                                    */
 .pozivnik{
   position:absolute; inset:0; z-index:40; display:grid; place-items:center;
   pointer-events:none; opacity:0;
 }
-.pozivnik.on{animation:pozivnik 2.8s cubic-bezier(.2,.8,.3,1) forwards}
-.pozivnik .kut{
-  display:flex; flex-direction:column; align-items:center; gap:1.05rem;
-  padding:1.5rem 2.1rem 1.7rem;
-  background:rgba(12,16,20,.82); border:1px solid var(--brass-dim);
-  backdrop-filter:blur(7px) saturate(.9);
-  box-shadow:0 18px 50px rgba(0,0,0,.5);
+/* meka sjena bez ruba - drzi natpis citljivim nad svijetlim kadrom */
+.pozivnik::before{
+  content:""; position:absolute; left:50%; top:50%;
+  width:min(96vw,32rem); height:19rem; transform:translate(-50%,-50%);
+  background:
+    radial-gradient(34% 26% at 50% 40%,rgba(4,6,9,.74),rgba(4,6,9,0) 76%),
+    radial-gradient(62% 56% at 50% 46%,rgba(4,6,9,.52),rgba(4,6,9,0) 78%);
 }
-.pozivnik span{
-  font:600 10.5px var(--f-ui); letter-spacing:.34em; text-transform:uppercase;
-  color:var(--lime); text-indent:.34em;
+.pozivnik.on{animation:pozivUlaz 3s cubic-bezier(.22,.8,.28,1) forwards}
+
+.pozivnik .znak{
+  position:relative; display:flex; flex-direction:column; align-items:center; gap:1.25rem;
 }
-.pozivnik .strelica{
-  display:block; width:13px; height:13px;
-  border-right:1.5px solid var(--brass); border-bottom:1.5px solid var(--brass);
-  transform:rotate(45deg);
+.pozivnik .natpis{display:flex; align-items:center; gap:1rem}
+.pozivnik .natpis span{
+  font:600 9.5px var(--f-ui); letter-spacing:.44em; text-transform:uppercase;
+  color:#f3efe6; text-indent:.44em; white-space:nowrap;
+  text-shadow:0 1px 2px rgba(0,0,0,.92), 0 2px 18px rgba(0,0,0,.75);
 }
-@keyframes pozivnik{
-  0%   { opacity:0; transform:translateY(10px) scale(.97) }
-  14%  { opacity:1; transform:none }
-  74%  { opacity:1; transform:none }
-  100% { opacity:0; transform:translateY(-6px) scale(.99) }
+.pozivnik .vlas{display:block; width:2.7rem; height:1px; transform:scaleX(0);
+  box-shadow:0 0 6px rgba(200,145,47,.28)}
+.pozivnik .vlas.l{background:linear-gradient(90deg,transparent,var(--brass)); transform-origin:right}
+.pozivnik .vlas.d{background:linear-gradient(90deg,var(--brass),transparent); transform-origin:left}
+.pozivnik.on .vlas{animation:vlasVan .7s .15s cubic-bezier(.22,.8,.28,1) forwards}
+
+.pozivnik .viska{position:relative; width:1px; height:3.9rem}
+.pozivnik .os{
+  position:absolute; inset:0; transform:scaleY(0); transform-origin:top;
+  background:linear-gradient(180deg,var(--brass-lit) 0%,var(--brass) 45%,rgba(200,145,47,.28) 100%);
+  box-shadow:0 0 8px rgba(200,145,47,.30);
 }
-@media (prefers-reduced-motion:no-preference){
-  .pozivnik.on .strelica{animation:kapni 1.05s ease-in-out .3s 2}
+.pozivnik.on .os{animation:osDolje .62s .45s cubic-bezier(.22,.8,.28,1) forwards}
+.pozivnik .zrno{
+  position:absolute; left:50%; top:0; width:7px; height:7px; margin-left:-3.5px;
+  border:1px solid var(--brass-lit); background:rgba(226,177,78,.22);
+  box-shadow:0 0 10px rgba(226,177,78,.35);
+  transform:rotate(45deg); opacity:0;
 }
-@keyframes kapni{
-  0%,100%{transform:rotate(45deg) translate(0,0); opacity:.55}
-  50%    {transform:rotate(45deg) translate(3px,3px); opacity:1}
+.pozivnik.on .zrno{animation:zrnoPada .95s .9s ease-in-out 2}
+
+@keyframes pozivUlaz{
+  0%   { opacity:0; transform:translateY(12px) }
+  10%  { opacity:1; transform:none }
+  85%  { opacity:1; transform:none }
+  100% { opacity:0; transform:translateY(-7px) }
+}
+@keyframes vlasVan{ to{ transform:scaleX(1) } }
+@keyframes osDolje{ to{ transform:scaleY(1) } }
+@keyframes zrnoPada{
+  0%   { opacity:0; transform:translateY(0) rotate(45deg) }
+  22%  { opacity:1 }
+  72%  { opacity:1 }
+  100% { opacity:0; transform:translateY(3.2rem) rotate(45deg) }
+}
+@media (min-width:880px){
+  .pozivnik .natpis span{font-size:10px; letter-spacing:.48em; text-indent:.48em}
+  .pozivnik .vlas{width:3rem}
+  .pozivnik .viska{height:4.4rem}
+  @keyframes zrnoPada{
+    0%   { opacity:0; transform:translateY(0) rotate(45deg) }
+    22%  { opacity:1 }
+    72%  { opacity:1 }
+    100% { opacity:0; transform:translateY(3.7rem) rotate(45deg) }
+  }
 }
 
 /* -- traka pristanka: ista gradja kao traka prototipa gore -------- */
@@ -741,9 +785,13 @@ body.pita .walkbar{bottom:calc(24px + 6.2rem + var(--sab))}
     <!-- poziv koji se sam javi i sam ode; ne prima klikove,
          pa nikad ne stoji gostu na putu -->
     <div class="pozivnik" id="pozivnik" aria-hidden="true">
-      <div class="kut">
-        <span data-i18n="dolje">Scroll down</span>
-        <i class="strelica"></i>
+      <div class="znak">
+        <div class="natpis">
+          <i class="vlas l"></i>
+          <span data-i18n="dolje">Scroll down</span>
+          <i class="vlas d"></i>
+        </div>
+        <div class="viska"><i class="os"></i><i class="zrno"></i></div>
       </div>
     </div>
 
@@ -1262,7 +1310,7 @@ var Walk = (function(){
       if (progress() > 0.004){ el.remove(); return; }
       el.classList.add('on');
       MJ.dog('scroll_hint_shown', {});
-      setTimeout(function(){ el.remove(); }, 2900);
+      setTimeout(function(){ el.remove(); }, 3100);
     }, 700);
   }
 
