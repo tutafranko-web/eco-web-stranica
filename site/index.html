@@ -44,7 +44,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://www.googletagmanager.com">
-<link rel="preload" as="image" href="frames/lo/f0001.webp?v=3" fetchpriority="high">
+<link rel="preload" as="image" href="frames/lo/f0001.webp?v=4" fetchpriority="high">
 
 <!-- ══ Strukturirani podaci ══════════════════════════════════
      Ovo Google čita kao činjenice o restoranu i može ih pokazati
@@ -799,7 +799,7 @@ body.pita .walkbar{bottom:calc(24px + 6.2rem + var(--sab))}
 
     <!-- zamjena kad je kretanje isključeno -->
     <div class="still" id="still">
-      <img src="img/poster.webp?v=3" alt="PIER bistro, the entrance from the stone alley" width="1440" height="2560">
+      <img src="img/poster.webp?v=4" alt="PIER bistro, the entrance from the stone alley" width="1440" height="2560">
       <div id="stillList"></div>
     </div>
   </div>
@@ -1259,7 +1259,7 @@ var Walk = (function(){
   /* biljeg izdanja: okviri se kesiraju kao nepromjenjivi, pa im se
      pri svakoj novoj seriji mora promijeniti adresa, inace povratnik
      zauvijek gleda staru snimku */
-  var IZDANJE = '3';
+  var IZDANJE = '4';
   function srcHi(i){ return 'frames/hi/f' + String(i+1).padStart(4,'0') + '.webp?v=' + IZDANJE; }
   function srcLo(i){ return 'frames/lo/f' + String(i+1).padStart(4,'0') + '.webp?v=' + IZDANJE; }
 

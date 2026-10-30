@@ -10,7 +10,7 @@ Uživo: **https://pier-bistro.vercel.app**
 | `site/index.html` | **aktivna verzija** — vođena šetnja s poglavljima |
 | `site/v1.html` | prethodna verzija, `noindex` (živa na `/v1`) |
 | `site/404.html` | stranica za nepostojeće adrese |
-| `site/frames/hi/` | 400 okvira 1440×2560 (q72) za scroll animaciju |
+| `site/frames/hi/` | 400 okvira 1440×2560 (q80) za scroll animaciju |
 | `site/frames/lo/` | 50 okvira 720×1280 (q66), učitavaju se prvi |
 | `site/img/` | poster, fotografije prostora i OG kartica za dijeljenje |
 | `site/robots.txt` | tražilice i AI pauci — sve dopušteno osim `/v1` |
@@ -77,6 +77,27 @@ decimala — bez toga bi skok na poglavlje promasio.
 Raspored slijedi gramatiku iz skilla za ugostiteljstvo: prilaz je
 prijevoz pa ide žvustro, prag i šank su trenuci zanata pa se na njima
 stoji, salon nosi poziv i drži najduže.
+
+### Povecanje ucenim modelom
+
+Okviri se **ne** povecavaju lanczosom nego modelom `realesr-general-x4v3`
+(ONNX, na procesoru). Lanczos ne zna dodati detalj — samo razvuce ono
+što već postoji; model je treniran na stvarnoj kompresiranoj građi, a
+naša snimka je upravo to: noćni telefonski video od oko 1,6 Mbps.
+
+Lanac je zato okrenut: montaža se radi na **izvornoj** rezoluciji
+(576×1024), a povećanje ide zadnje — iz čiste građe, ne preko već
+razvučene slike. Denoise je usput ublažen (`hqdn3d=2:1:4:4`), jer
+model sam čisti šum, a jači denoise bi mu prije toga pojeo teksturu
+kamena.
+
+Put: 576×1024 → model ×4 → 2304×4096 → natrag na 1440×2560. Spuštanje
+s četverostrukog na dvostruko čisti ono što je model izmislio na
+pretjeranom mjerilu.
+
+Oko 170 s po okviru na ovom stroju; cijela serija je posao od nekoliko
+sati. Skripte: `obnova.sh` (montaža), `poveca.py` (model), `izdaj2.sh`
+(kodiranje).
 
 ### Zašto okviri, a ne video
 
